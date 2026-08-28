@@ -3,8 +3,11 @@ import express, { Express, Request, Response} from 'express'
 const app: Express = express()
 const port: Number = 3000
 
+app.set("views", './views')
+app.set("view engine", "pug")
+
 app.get('/tours', (req: Request, res: Response) => {
-  res.send('Tours')
+  res.render('client/pages/tours/index')
 })
 
 app.listen(port, () => {
