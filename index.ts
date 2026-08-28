@@ -3,8 +3,8 @@ import express, { Express, Request, Response} from 'express'
 const app: Express = express()
 const port: Number = 3000
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('Ok')
+app.get('/tours', (req: Request, res: Response) => {
+  res.send('Tours')
 })
 
 app.listen(port, () => {
