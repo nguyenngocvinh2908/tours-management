@@ -1,10 +1,11 @@
-import express, { Express, Request, Response} from 'express'
+import express, { Express } from 'express'
 import sequelize from './config/database'
 import dotenv from 'dotenv'
-import Tour from './models/tour'
+import clientRoutes from './routes/client'
 
-// Setup Env
+// Setup Env   
 dotenv.config()
+
 // Connect Databse
 sequelize
 
@@ -15,12 +16,8 @@ const port: Number | String = process.env.PORT || 3000
 app.set("views", './views')
 app.set("view engine", "pug")
 
-app.get('/tours', async (req: Request, res: Response) => {
-  const tours = await Tour.findAll({ raw: true })
-  res.render('client/pages/tours/index', {
-    tours: tours
-  })
-})
+// Routes
+clientRoutes(app)
 
 app.listen(port, () => {
   console.log(`App listenning on port ${port}`)
