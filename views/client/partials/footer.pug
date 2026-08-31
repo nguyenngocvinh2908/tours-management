@@ -1,1 +1,19 @@
-footer footer
+footer.main-footer
+  .container
+    .row.g-4
+      .col-lg-4
+        h5.fw-bold.mb-3 TourManagement
+        p Partnering to provide the finest travel experiences in Vietnam.
+      .col-lg-2.col-md-4
+        h6.mb-3 Link
+        ul.footer-link-list
+          li: a(href="/") Home
+          li: a(href="/tours") The Tours
+          li: a(href="/categories") Category
+      .col-lg-3.col-md-4
+        h6.mb-3 Contact
+        ul.footer-link-list
+          li: span Email: contact@tourmanagement.com
+          li: span Hotine: 1900 1234
+    .footer-bottom
+      | © #{new Date().getFullYear()} TourManagement. All rights reserved.

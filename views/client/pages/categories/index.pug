@@ -1,0 +1,27 @@
+extends ../../layouts/default.pug
+
+block main
+  // Banner Tiêu Đề
+  .page-header-banner
+    .container.text-center
+      h1 Travel Categories
+      p Discover amazing destinations based on your favorite themes.
+
+  .container.mb-5
+    if (categories && categories.length > 0)
+      .row.g-4
+        each item in categories
+          .col-12.col-md-6.col-lg-4
+            a.category-card(href=`/tours/${item.slug}`)
+              - var imageSrc = item.image ? item.image : 'https://picsum.photos/600/400'
+              img(src=imageSrc alt=item.title)
+              
+              .category-card-overlay
+                h3.category-title= item.title
+                
+                if item.description
+                  p.category-count.text-truncate.mb-0= item.description.replace(/<[^>]*>?/gm, '')
+    else
+      .text-center.py-5
+        i.fa-solid.fa-folder-open.fa-3x.text-muted.mb-3
+        p.text-muted No list has been updated yet.

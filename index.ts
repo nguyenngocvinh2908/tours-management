@@ -12,9 +12,13 @@ sequelize
 const app: Express = express()
 const port: Number | String = process.env.PORT || 3000
 
+// Setup Public
+app.use(express.static('public'))
+
 // Setup Pug
 app.set("views", './views')
 app.set("view engine", "pug")
+
 
 // Routes
 clientRoutes(app)

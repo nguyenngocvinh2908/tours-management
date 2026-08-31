@@ -1,0 +1,425 @@
+/* ==========================================================================
+   TOUR MANAGEMENT CLIENT SYSTEM - MAIN STYLESHEET
+   Framework Base: Bootstrap 5 Custom Extended & Modern UI Design System
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. VARIABLES & COLOR PALETTE
+   -------------------------------------------------------------------------- */
+:root {
+  /* Brand Colors */
+  --primary-color: #0d6efd;
+  --primary-hover: #0b5ed7;
+  --primary-light: #eef5ff;
+  --secondary-color: #0ed2a9;
+  --secondary-hover: #0bc09a;
+  --accent-orange: #ff6b35;
+  --accent-yellow: #ffc107;
+  
+  /* Neutral Palette */
+  --dark-heading: #1e293b;
+  --body-text: #475569;
+  --muted-text: #94a3b8;
+  --bg-light: #f8fafc;
+  --bg-card: #ffffff;
+  --border-color: #e2e8f0;
+  --border-light: #f1f5f9;
+
+  /* Typography */
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06);
+  --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.08);
+  --shadow-lg: 0 12px 28px rgba(15, 23, 42, 0.12);
+  --shadow-hover: 0 18px 36px rgba(15, 23, 42, 0.15);
+
+  /* Transitions & Border Radius */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --transition-fast: all 0.2s ease-in-out;
+  --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* --------------------------------------------------------------------------
+   2. GLOBAL & BASE RESETS
+   -------------------------------------------------------------------------- */
+body {
+  font-family: var(--font-sans);
+  color: var(--body-text);
+  background-color: var(--bg-light);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--dark-heading);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+a {
+  text-decoration: none;
+  transition: var(--transition-fast);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+/* --------------------------------------------------------------------------
+   3. HEADER & NAVIGATION (partials/header.pug)
+   -------------------------------------------------------------------------- */
+.main-header {
+  background-color: #ffffff;
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border-color);
+  transition: var(--transition-smooth);
+}
+
+.navbar-brand {
+  font-weight: 800;
+  font-size: 1.4rem;
+  color: var(--dark-heading);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-icon {
+  width: 38px;
+  height: 38px;
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  color: #ffffff;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+}
+
+.nav-link {
+  font-weight: 600;
+  color: var(--body-text);
+  padding: 8px 16px !important;
+  border-radius: var(--radius-sm);
+  transition: var(--transition-fast);
+}
+
+.nav-link:hover, 
+.nav-link.active {
+  color: var(--primary-color) !important;
+  background-color: var(--primary-light);
+}
+
+/* --------------------------------------------------------------------------
+   4. BANNERS & PAGE HEADERS
+   -------------------------------------------------------------------------- */
+.page-header-banner {
+  background: linear-gradient(135deg, rgba(13, 110, 253, 0.06) 0%, rgba(14, 210, 169, 0.06) 100%);
+  border-bottom: 1px solid var(--border-color);
+  padding: 50px 0;
+  margin-bottom: 40px;
+}
+
+.page-header-banner h1 {
+  font-size: 2.25rem;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+/* --------------------------------------------------------------------------
+   5. FILTER SIDEBAR (components)
+   -------------------------------------------------------------------------- */
+.filter-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+}
+
+.filter-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--border-light);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.filter-group {
+  margin-bottom: 20px;
+}
+
+.filter-group .form-label {
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: var(--dark-heading);
+  margin-bottom: 8px;
+}
+
+/* --------------------------------------------------------------------------
+   6. TOUR CARD COMPONENT
+   -------------------------------------------------------------------------- */
+.tour-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: var(--transition-smooth);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.tour-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-hover);
+  border-color: rgba(13, 110, 253, 0.3);
+}
+
+.tour-card-img-wrap {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  overflow: hidden;
+}
+
+.tour-card-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.tour-card:hover .tour-card-img-wrap img {
+  transform: scale(1.06);
+}
+
+.tour-badge-discount {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background-color: var(--accent-orange);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.75rem;
+  padding: 4px 10px;
+  border-radius: 50px;
+  box-shadow: var(--shadow-sm);
+}
+
+.tour-badge-duration {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(4px);
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+}
+
+.tour-card-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.tour-location {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--primary-color);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.tour-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.4;
+  margin-bottom: 10px;
+  color: var(--dark-heading);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.tour-rating {
+  font-size: 0.85rem;
+  color: var(--accent-yellow);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 16px;
+}
+
+.tour-rating span {
+  color: var(--muted-text);
+  font-size: 0.8rem;
+  margin-left: 4px;
+}
+
+.tour-card-footer {
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.tour-price-old {
+  font-size: 0.8rem;
+  color: var(--muted-text);
+  text-decoration: line-through;
+  line-height: 1;
+}
+
+.tour-price-current {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--accent-orange);
+  line-height: 1.1;
+}
+
+/* --------------------------------------------------------------------------
+   7. CATEGORY CARD COMPONENT
+   -------------------------------------------------------------------------- */
+.category-card {
+  position: relative;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  height: 240px;
+  display: block;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-smooth);
+}
+
+.category-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.category-card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(15, 23, 42, 0.85) 100%);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  color: #ffffff;
+}
+
+.category-card:hover img {
+  transform: scale(1.08);
+}
+
+.category-card:hover {
+  box-shadow: var(--shadow-lg);
+}
+
+.category-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 4px;
+}
+
+.category-count {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* --------------------------------------------------------------------------
+   8. FOOTER (partials/footer.pug)
+   -------------------------------------------------------------------------- */
+.main-footer {
+  background-color: #0f172a;
+  color: #94a3b8;
+  padding-top: 60px;
+  padding-bottom: 30px;
+  margin-top: 80px;
+  border-top: 1px solid #1e293b;
+}
+
+.main-footer h5, .main-footer h6 {
+  color: #ffffff;
+}
+
+.footer-link-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-link-list li {
+  margin-bottom: 10px;
+}
+
+.footer-link-list a {
+  color: #94a3b8;
+  font-size: 0.9rem;
+}
+
+.footer-link-list a:hover {
+  color: var(--primary-color);
+  padding-left: 4px;
+}
+
+.footer-bottom {
+  border-top: 1px solid #1e293b;
+  padding-top: 24px;
+  margin-top: 40px;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+/* --------------------------------------------------------------------------
+   9. BUTTON & FORM EXTENSIONS
+   -------------------------------------------------------------------------- */
+.btn-primary-custom {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  color: #ffffff;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  padding: 10px 20px;
+}
+
+.btn-primary-custom:hover {
+  background-color: var(--primary-hover);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(13, 110, 253, 0.25);
+}
+
+.btn-outline-custom {
+  border: 1px solid var(--border-color);
+  color: var(--dark-heading);
+  background-color: #ffffff;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  padding: 8px 18px;
+}
+
+.btn-outline-custom:hover {
+  background-color: var(--bg-light);
+  color: var(--primary-color);
+}
