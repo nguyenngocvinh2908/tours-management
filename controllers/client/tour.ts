@@ -5,9 +5,23 @@ import { QueryTypes } from 'sequelize'
 import { slugToTitle } from '../../helpers/slugToTitle'
 import { getFirstImage } from '../../helpers/handleImageTour'
 
+const LIMIT_ITEM = 6
 
 // [ GET ] "/tours"
 export const index = async (req: Request, res: Response) => {
+  // Pavigation
+  const page = parseInt(req.query.page as string) || 1
+  const skip = (page - 1) * LIMIT_ITEM
+  // Count total tours
+  const totalTours = await Tour.count({
+    where: {
+      deleted: false,
+      status: "active"
+    }
+  })
+
+  const totalPages = Math.ceil(totalTours / LIMIT_ITEM)
+
   const tours = await Tour.findAll({
     where: {
       deleted: false,
@@ -21,7 +35,9 @@ export const index = async (req: Request, res: Response) => {
         ]
       ]
     },
-    raw: true
+    raw: true,
+    limit: LIMIT_ITEM,
+    offset: skip,
   })
 
   // Chuẩn hóa dữ liệu image trước khi truyền sang Pug View
@@ -34,7 +50,12 @@ export const index = async (req: Request, res: Response) => {
   res.render('client/pages/tours/index', {
     titlePage: 'Tours Page',
     currentPath:'/tours',
-    tours: tours
+    tours: tours,
+    pagination: {
+      currentPage: page,
+      totalPages: totalPages,
+      baseUrl: '/tours'
+    }
   })
 }
 
