@@ -1,4 +1,48 @@
 extends ../../layouts/default.pug
 
 block main
-  h1 Tour Page
+  .page-header-banner
+    .container.text-center
+      h1= titlePage
+      p Discover amazing journeys in your favorite categories.
+
+  .container.mb-5
+    if (tours && tours.length > 0)
+      .row.row-cols-1.row-cols-md-2.row-cols-xl-3.g-4
+        each item in tours
+          .col
+            .tour-card
+              .tour-card-img-wrap
+                // Dùng trực tiếp item.image đã xử lý từ Controller
+                img(
+                  src=(item.image ? item.image : 'https://picsum.photos/400/250') 
+                  alt=item.title
+                )
+                if item.discount > 0
+                  span.tour-badge-discount -#{item.discount}%
+                if item.time
+                  span.tour-badge-duration
+                    i.fa-solid.fa-clock.me-1
+                    | #{item.time}
+
+              .tour-card-body
+                .tour-location
+                  i.fa-solid.fa-location-dot
+                  | Việt Nam
+                h3.tour-title= item.title
+                
+                .tour-card-footer
+                  div
+                    if item.discount > 0
+                      .tour-price-old #{item.price.toLocaleString('vi-VN')}đ
+                      .tour-price-current #{item.price_special.toLocaleString('vi-VN')}đ
+                    else
+                      .tour-price-current #{item.price.toLocaleString('vi-VN')}đ
+                      
+                  a.btn.btn-outline-custom.btn-sm(href=`/tours/detail/${item.slug}`) See Details
+      // Pavigaton
+      
+    else
+      .text-center.py-5
+        i.fa-solid.fa-box-open.fa-3x.text-muted.mb-3
+        p.text-muted There are currently no tours in this category.
