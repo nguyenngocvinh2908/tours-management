@@ -1,0 +1,108 @@
+extends ../../layouts/default.pug
+include ../../mixins/moment.pug
+
+block head
+  link(rel="stylesheet" href="/client/css/tour-detail.css")
+
+block main
+  .container.my-5
+    .row.g-4
+      // CỘT TRÁI: Gallery Ảnh & Tabs Thông Tin
+      .col-12.col-lg-8
+        // IMAGE GALLERY (Nằm ngay trên cùng cột trái)
+        if tour.images && tour.images.length > 0
+          .tour-gallery.mb-4
+            .main-image-wrap.shadow-sm.mb-3
+              img#zoomImage.w-100(
+                src=tour.images[0] 
+                alt=tour.title 
+                style="height: 440px; object-fit: cover;"
+              )
+            if tour.images.length > 1
+              .thumb-images.d-flex.gap-3.overflow-auto.pb-2
+                each img, index in tour.images
+                  img.thumb-item.cursor-pointer(
+                    src=img 
+                    class=(index === 0 ? 'active' : '')
+                    alt=`${tour.title} ${index + 1}`
+                    style="width: 100px; height: 68px; object-fit: cover;"
+                    onclick="document.getElementById('zoomImage').src = this.src; document.querySelectorAll('.thumb-item').forEach(el => el.classList.remove('active')); this.classList.add('active');"
+                  )
+
+        // CONTENT TABS
+        .glass-card.p-4.mb-4
+          ul.nav.nav-pills.custom-tabs.gap-2.mb-4#tourTab(role="tablist")
+            li.nav-item
+              button.nav-link.active#info-tab(data-bs-toggle="tab" data-bs-target="#info-pane")
+                i.fa-solid.fa-circle-info.me-2
+                | Information Details
+            li.nav-item
+              button.nav-link#schedule-tab(data-bs-toggle="tab" data-bs-target="#schedule-pane")
+                i.fa-solid.fa-route.me-2
+                | Tour Schedule
+
+          .tab-content#tourTabContent
+            .tab-pane.fade.show.active#info-pane
+              if tour.information
+                .lh-lg!= tour.information
+              else
+                p.text-muted.italic Tour information is being updated...
+
+            .tab-pane.fade#schedule-pane
+              if tour.schedule
+                .lh-lg!= tour.schedule
+              else
+                p.text-muted.italic Tour schedule is being updated...
+
+      // CỘT PHẢI: Sticky Booking Card (Đặt title tour ở đây)
+      .col-12.col-lg-4
+        .booking-card.shadow-lg.p-4.sticky-top(style="top: 100px; z-index: 10;")
+          // TOUR TITLE (Đưa sang đỉnh cột bên phải)
+          h3.fw-bold.text-dark.mb-3.lh-base= tour.title
+
+          // GIÁ TOUR
+          .price-box.mb-3.p-3.bg-white.rounded-3.border
+            if tour.discount > 0
+              .d-flex.align-items-center.gap-2.mb-1
+                span.text-muted.text-decoration-line-through.small #{tour.price.toLocaleString('vi-VN')}đ
+                span.badge.bg-danger -#{tour.discount}%
+              .h2.fw-bold.text-danger.mb-0 #{tour.price_special.toLocaleString('vi-VN')}đ
+                span.fs-6.text-muted.fw-normal  / guest
+            else
+              .h2.fw-bold.text-primary.mb-0 #{tour.price.toLocaleString('vi-VN')}đ
+                span.fs-6.text-muted.fw-normal  / guest
+
+          // BỘ THÔNG TIN BADGES
+          .tour-meta-info.d-flex.flex-column.gap-2.mb-4.p-3.bg-light.rounded-3
+            .badge-soft.w-100
+              i.fa-solid.fa-barcode.me-2.text-primary
+              | Code: 
+              strong.text-dark.ms-1 #{tour.code}
+            .badge-soft.w-100
+              i.fa-regular.fa-calendar-check.me-2.text-primary
+              | Departure: 
+              strong.text-dark.ms-1
+                +formatDateTime(tour.timeStart)
+            .badge-soft.w-100
+              i.fa-solid.fa-user-group.me-2.text-primary
+              | Available: 
+              strong.text-dark.ms-1 #{tour.stock} seats
+
+          // FORM ĐẶT TOUR
+          form(action="/cart/add" method="POST")
+            input(type="hidden" name="tourId" value=tour.id)
+            
+            .mb-4
+              label.form-label.fw-bold.text-secondary Number of Guests:
+              .input-group
+                input.form-control.form-control-lg.text-center.fw-bold(
+                  type="number" 
+                  name="quantity" 
+                  value="1" 
+                  min="1" 
+                  max=tour.stock
+                )
+
+            button.btn.btn-gradient-primary.w-100.fw-bold.fs-5(type="submit")
+              i.fa-solid.fa-cart-plus.me-2
+              | Add to Cart

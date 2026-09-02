@@ -10,22 +10,20 @@ header.main-header.sticky-top
         span.navbar-toggler-icon
       
       // Form Tìm Kiếm Có AutoSuggest
-      form.search-form.position-relative.ms-auto.me-3(
-        action="/search/result" 
-        method="GET" 
-        style="width: 320px;"
-      )
-        .input-group
-          input.form-control.form-control-sm(
+      // SEARCH FORM HIỆN ĐẠI
+      form.header-search-form(action="/tours/search" method="GET")
+        .search-input-group
+          i.fa-solid.fa-magnifying-glass.search-icon
+          input.search-input(
             type="text" 
             name="keyword" 
-            placeholder="Search Tours..."
-            value= keyword ? keyword : ''
+            placeholder="Search destinations, tours..." 
+            value=keyword
             autocomplete="off"
-            input-search
           )
-          button.btn.btn-primary.btn-sm(type="submit")
-            i.fa-solid.fa-magnifying-glass
+          button.search-btn(type="submit")
+            span Search
+            i.fa-solid.fa-arrow-right.ms-2
         // Khung Dropdown Hiển Thị Gợi Ý Tìm Kiếm
         .inner-suggest.position-absolute.top-100.start-0.w-100.bg-white.shadow.rounded-3.mt-1.p-2.d-none(
           box-suggest

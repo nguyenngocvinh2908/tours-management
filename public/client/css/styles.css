@@ -115,6 +115,98 @@ img {
   background-color: var(--primary-light);
 }
 
+/* Custom Header Search Bar */
+.header-search-form {
+  position: relative;
+  width: 100%;
+  max-width: 420px; /* Điều chỉnh độ rộng tối đa tùy giao diện */
+  margin: 0 auto;
+}
+
+.search-input-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background-color: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 50px; /* Bo tròn capsule mượt mà */
+  padding: 4px 6px 4px 18px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+}
+
+/* Icon kính lúp góc trái */
+.search-icon {
+  color: #94a3b8;
+  font-size: 0.95rem;
+  margin-right: 10px;
+  pointer-events: none;
+  transition: color 0.3s ease;
+}
+
+/* Ô nhập chữ */
+.search-input {
+  width: 100%;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 0.925rem;
+  color: #1e293b;
+  font-weight: 500;
+}
+
+.search-input::placeholder {
+  color: #94a3b8;
+  font-weight: 400;
+}
+
+/* Nút Submit bên phải */
+.search-btn {
+  background: linear-gradient(135deg, #0d6efd, #0b5ed7);
+  color: #ffffff;
+  border: none;
+  border-radius: 40px;
+  padding: 8px 18px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(13, 110, 253, 0.2);
+}
+
+.search-btn:hover {
+  background: linear-gradient(135deg, #0b5ed7, #0a58ca);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(13, 110, 253, 0.3);
+}
+
+/* HIỆU ỨNG FOCUS (Khi người dùng click vào ô tìm kiếm) */
+.search-input-group:focus-within {
+  background-color: #ffffff;
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.12), 0 8px 20px rgba(0, 0, 0, 0.04);
+}
+
+.search-input-group:focus-within .search-icon {
+  color: #0d6efd;
+}
+
+/* Responsive cho màn hình nhỏ (Mobile) */
+@media (max-width: 576px) {
+  .search-btn span {
+    display: none; /* Ẩn chữ 'Search' trên mobile, chỉ giữ lại icon */
+  }
+  .search-btn {
+    padding: 8px 12px;
+  }
+  .search-btn i {
+    margin-left: 0 !important;
+  }
+}
+
 /* --------------------------------------------------------------------------
    4. BANNERS & PAGE HEADERS
    -------------------------------------------------------------------------- */

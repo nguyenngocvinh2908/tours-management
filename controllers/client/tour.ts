@@ -96,3 +96,32 @@ export const toursOfCategory = async (req: Request, res: Response) => {
     tours: tours
   })
 }
+
+// [ GET ] "/tours/detail/:slugTour"
+export const detail = async (req: Request, res: Response) => {
+  try{
+    const slugTour = String(req.params.slugTour)
+    const tour: any = await Tour.findOne({
+      where: {
+        slug: slugTour,
+        deleted: false,
+        status: "active"
+      },
+      raw: true
+    })
+    if(!tour) return res.redirect('/tours')
+    // Handle Images
+    if(tour.images) tour.images = JSON.parse(tour.images)
+    else tour.images = []
+    // Handle Price Special
+    tour.price_special = Math.round(tour.price * (1 - tour.discount / 100))
+    
+    res.render('client/pages/tours/detail', {
+      titlePage: tour.title,
+      tour: tour
+    })
+
+  } catch (error) {
+    return res.redirect('/tours')
+  }
+}

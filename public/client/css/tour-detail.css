@@ -1,0 +1,92 @@
+/* Hiệu ứng nền & Card hiện đại */
+.glass-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(230, 235, 240, 0.8);
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+/* Badge thông tin tinh tế */
+.badge-soft {
+  background-color: #f1f5f9;
+  color: #475569;
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-weight: 500;
+  font-size: 0.85rem;
+}
+
+/* Bộ sưu tập ảnh (Gallery) */
+.main-image-wrap {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.main-image-wrap img {
+  transition: transform 0.5s ease;
+}
+
+.main-image-wrap:hover img {
+  transform: scale(1.02);
+}
+
+.thumb-item {
+  border: 2px solid transparent;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+  opacity: 0.7;
+}
+
+.thumb-item:hover, .thumb-item.active {
+  opacity: 1;
+  border-color: #0d6efd;
+  transform: translateY(-2px);
+}
+
+/* Custom Tabs đẹp mắt */
+.custom-tabs .nav-link {
+  border: none;
+  color: #64748b;
+  font-weight: 600;
+  padding: 12px 24px;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.custom-tabs .nav-link.active {
+  background-color: #0d6efd;
+  color: #fff !important;
+  box-shadow: 0 4px 12px rgba(13, 110, 253, 0.25);
+}
+
+/* Form Booking VIP */
+.booking-card {
+  border-radius: 20px;
+  background: linear-gradient(145deg, #ffffff, #f8fafc);
+  border: 1px solid #e2e8f0;
+}
+
+.price-highlight {
+  background: linear-gradient(135deg, #ff4e50, #f9d423);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.btn-gradient-primary {
+  background: linear-gradient(135deg, #0d6efd, #004085);
+  border: none;
+  color: white;
+  border-radius: 12px;
+  padding: 14px;
+  box-shadow: 0 8px 20px rgba(13, 110, 253, 0.3);
+  transition: all 0.3s ease;
+}
+
+.btn-gradient-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 25px rgba(13, 110, 253, 0.4);
+  color: white;
+}

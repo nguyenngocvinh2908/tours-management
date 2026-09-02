@@ -2,6 +2,7 @@ import express, { Express } from 'express'
 import sequelize from './config/database'
 import dotenv from 'dotenv'
 import clientRoutes from './routes/client'
+import moment from 'moment'
 
 // Setup Env   
 dotenv.config()
@@ -19,6 +20,8 @@ app.use(express.static('public'))
 app.set("views", './views')
 app.set("view engine", "pug")
 
+// Setup Moment
+app.locals.moment = moment
 
 // Routes
 clientRoutes(app)

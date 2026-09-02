@@ -7,4 +7,6 @@ router.get('/', controller.index)
 
 router.get('/:slugCategory', controller.toursOfCategory)
 
+router.get('/detail/:slugTour', controller.detail)
+
 export const TourRouter: Router = router
