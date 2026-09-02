@@ -33,7 +33,7 @@ if(inputSearch) {
   // Ân box suggest khi click ra ngoài
   document.addEventListener("click", (e) => {
     if (!inputSearch.contains(e.target) && !boxSuggest.contains(e.target)) {
-      boxSuggest.classList.add("d-none");
+      boxSuggest.classList.add("d-none")
     }
   })
 }

@@ -10,7 +10,6 @@ header.main-header.sticky-top
         span.navbar-toggler-icon
       
       // Form Tìm Kiếm Có AutoSuggest
-      // SEARCH FORM HIỆN ĐẠI
       form.header-search-form(action="/tours/search" method="GET")
         .search-input-group
           i.fa-solid.fa-magnifying-glass.search-icon
@@ -20,6 +19,7 @@ header.main-header.sticky-top
             placeholder="Search destinations, tours..." 
             value=keyword
             autocomplete="off"
+            input-search
           )
           button.search-btn(type="submit")
             span Search
