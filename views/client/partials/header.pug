@@ -9,8 +9,8 @@ header.main-header.sticky-top
       button.navbar-toggler(type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar")
         span.navbar-toggler-icon
       
-      // Form Tìm Kiếm Có AutoSuggest
-      form.header-search-form(action="/tours/search" method="GET")
+      // Form Search
+      form.header-search-form.mx-lg-3(action="/tours/search" method="GET")
         .search-input-group
           i.fa-solid.fa-magnifying-glass.search-icon
           input.search-input(
@@ -24,7 +24,7 @@ header.main-header.sticky-top
           button.search-btn(type="submit")
             span Search
             i.fa-solid.fa-arrow-right.ms-2
-        // Khung Dropdown Hiển Thị Gợi Ý Tìm Kiếm
+        // AutoSuggest Box
         .inner-suggest.position-absolute.top-100.start-0.w-100.bg-white.shadow.rounded-3.mt-1.p-2.d-none(
           box-suggest
           style="z-index: 1000; max-height: 380px; overflow-y: auto;"
@@ -40,6 +40,18 @@ header.main-header.sticky-top
           li.nav-item
             a.nav-link(href="/tours" class=(currentPath === '/tours' ? 'active' : '')) Tour All
 
-        .d-flex.align-items-center.gap-2
+        .d-flex.align-items-center.gap-3
+          // Cart Icon with Quantity Badge
+          a.btn.btn-outline-primary.position-relative.rounded-circle.p-0.d-flex.align-items-center.justify-content-center(
+            href="/cart"
+            style="width: 40px; height: 40px;"
+            title="Shopping Cart"
+          )
+            i.fa-solid.fa-cart-shopping
+            if miniCartQuantity > 0
+              span.position-absolute.top-0.start-100.translate-middle.badge.rounded-pill.bg-danger
+                | #{miniCartQuantity}
+
+          //- Sign In / Sign Up Buttons
           a.btn.btn-outline-custom(href="/login") Sign In
           a.btn.btn-primary-custom(href="/register") Sign Up
