@@ -1,11 +1,15 @@
 extends ../../layouts/default.pug
 include ../../mixins/moment.pug
+include ../../mixins/alert.pug
 
 block head
   link(rel="stylesheet" href="/client/css/tour-detail.css")
 
 block main
   .container.my-5
+    //- Flash Alert Mixin
+    +alert-success(3000)
+    +alert-error(3000)
     .row.g-4
       // CỘT TRÁI: Gallery Ảnh & Tabs Thông Tin
       .col-12.col-lg-8

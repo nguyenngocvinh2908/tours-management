@@ -3,13 +3,13 @@ import CartItem from '../../models/cart-item'
 
 // [ POST ]: /cart/add
 export const addToCart = async (req: Request, res: Response) => {
+  const backUrl = String(req.get('Referrer'))
+
   try {
-    console.log(req.body)
     const cartId = req.cookies.cart_id
     const tourId = parseInt(req.body.tourId)
-    const quantity = parseInt(req.body.quantity)
+    const quantity = parseInt(req.body.quantity) || 1
 
-    // 1. Check Tour Exits
     const exitsItem: any = await CartItem.findOne({
       where: { 
         cartId: cartId, 
@@ -18,12 +18,10 @@ export const addToCart = async (req: Request, res: Response) => {
       } 
     })
     
-    if(exitsItem) {
-      // 2. Update Quantity
-      const newQuantity = exitsItem.get('quantity') as number + quantity 
+    if (exitsItem) {
+      const newQuantity = (exitsItem.get('quantity') as number) + quantity 
       await exitsItem.update({ quantity: newQuantity })
     } else {
-      // 3. Create New Cart_Item
       await CartItem.create({
         cartId: cartId,
         tourId: tourId,
@@ -31,9 +29,11 @@ export const addToCart = async (req: Request, res: Response) => {
       })
     }
 
-    res.redirect(req.get('Referrer') || '/tours')
+    req.flash('success', 'Tour added to cart successfully!')
+    res.redirect(backUrl)
+    
   } catch (error) {
-    console.error('Error adding to cart:', error)
-    res.redirect('/tours')
+    req.flash('error', 'Failed to add tour to cart.')
+    res.redirect(backUrl)
   }
 }

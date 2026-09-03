@@ -1,0 +1,21 @@
+mixin alert-success(time = 3000)
+  if messages && messages.success && messages.success.length > 0
+    .alert.alert-success.alert-dismissible.fade.show.position-fixed.top-0.end-0.m-3(
+      role="alert"
+      style="z-index: 9999;"
+      show-alert=time
+    )
+      i.fa-solid.fa-circle-check.me-2
+      span= messages.success[0]
+      button.btn-close(type="button" data-bs-dismiss="alert" aria-label="Close")
+
+mixin alert-error(time = 3000)
+  if messages && messages.error && messages.error.length > 0
+    .alert.alert-danger.alert-dismissible.fade.show.position-fixed.top-0.end-0.m-3(
+      role="alert"
+      style="z-index: 9999;"
+      show-alert=time
+    )
+      i.fa-solid.fa-triangle-exclamation.me-2
+      span= messages.error[0]
+      button.btn-close(type="button" data-bs-dismiss="alert" aria-label="Close")
