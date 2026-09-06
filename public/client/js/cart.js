@@ -42,7 +42,10 @@ document.addEventListener('DOMContentLoaded', () => {
           itemTotalEl.textContent = formatCurrency(data.itemTotalPrice)
         }
         // 2. Update Tổng Tiền Toàn Cart
-        updateSummaryPrices(data.totalPrice, data.totalQuantity);
+        updateSummaryPrices(data.totalPrice, data.totalQuantity)
+        showToast('Quantity updated successfully!')
+      } else {
+
       }
     } catch(e) {
       console.log(e)
@@ -67,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
             sendUpdateQuantityAPI(itemId, currentVal, inputEl)
           }
           else {
-            // Alert
+            showAlert2('Fully booked', `Maximum remaining spots for the tour: ${maxVal}!`, 'warning')
           }
         } else if(action === 'decrease') {
           if(currentVal > 1) {
@@ -90,9 +93,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if(isNaN(value) || value < 1) value = 1
         if(value > maxValue) {
           value = maxValue
-          // Thông Báo
+          showAlert2('Fully booked', `Maximum remaining spots for the tour: ${maxValue}!`, 'warning')
         }
-        console.log(value)
         sendUpdateQuantityAPI(itemId, value, item)
       })
     })
@@ -104,8 +106,8 @@ document.addEventListener('DOMContentLoaded', () => {
     btnDeleteItems.forEach((btn) => {
       btn.addEventListener('click', async () => {
         const itemId = btn.getAttribute('data-id')
-        const isConfirm = confirm('Bạn có chắc chắn muốn xóa tour này khỏi giỏ hàng?');
-        if (!isConfirm) return
+        const isConfirmed = await showConfirm('Remove from cart?', 'Are you sure you want to remove this tour from your cart?')
+        if (!isConfirmed) return
 
         try {
           const respone = await fetch(`/cart/delete/${itemId}`, {
@@ -119,14 +121,13 @@ document.addEventListener('DOMContentLoaded', () => {
           if(data.code === 200) {
             // Xóa dòng tr tương ứng
             const rowEl = document.querySelector(`tr[data-item-id="${itemId}"]`)
-            console.log(rowEl)
             if(rowEl) rowEl.remove()
 
             if(data.cartEmpty) location.reload()
             
             updateSummaryPrices(data.totalPrice, data.totalQuantity)
           } else {
-            // Thong Bao
+            showAlert2('Error', data.message || 'Failed to delete the product!')
           }
         } catch(error) {
           console.log(error)
