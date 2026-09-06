@@ -3,10 +3,8 @@ import sequelize from './config/database'
 import dotenv from 'dotenv'
 import clientRoutes from './routes/client'
 import moment from 'moment'
-import cookieParser from 'cookie-parser'
-import session from 'express-session'
-import flash from 'express-flash'
 import methodOverride from 'method-override'
+import cookieParser from 'cookie-parser'
 
 // Setup Env   
 dotenv.config()
@@ -17,6 +15,8 @@ sequelize
 const app: Express = express()
 const port: Number | String = process.env.PORT || 3000
 
+// Setup Cookies
+app.use(cookieParser())
 
 // Setup Body Parser
 app.use(express.json())
@@ -24,20 +24,6 @@ app.use(express.urlencoded({ extended: true }))
 
 // Setup Method Override
 app.use(methodOverride('_method'))
-
-// Setup Cookie_Parser
-app.use(cookieParser('ABBBBBAAA'))
-
-// Setup Session
-app.use(session({
-  secret: 'ABBBBBAAA',
-  resave: false,
-  saveUninitialized: false,
-  cookie: { maxAge: 60000 }
-}))
-
-// Setup Flash Messages
-app.use(flash())
 
 // Setup Public
 app.use(express.static('public'))

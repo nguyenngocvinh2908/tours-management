@@ -37,16 +37,3 @@ if(inputSearch) {
     }
   })
 }
-
-
-// Alert Flash Message
-const showAlert = document.querySelector('[show-alert]')
-if (showAlert) {
-  const time = parseInt(showAlert.getAttribute('show-alert')) || 3000
-  console.log('ok')
-  setTimeout(() => {
-    showAlert.classList.remove('show')
-    showAlert.classList.add('fade')
-    setTimeout(() => showAlert.remove(), 500)
-  }, time)
-}

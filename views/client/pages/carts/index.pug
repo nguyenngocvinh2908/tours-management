@@ -1,16 +1,11 @@
 extends ../../layouts/default.pug
 include ../../mixins/moment.pug
-include ../../mixins/alert.pug
 
 block head
-  link(rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css")
   link(rel="stylesheet" href="/client/css/cart.css")
 
 block main
   .container.my-5
-    // Flash Messages
-    +alert-success(3000)
-    +alert-error(3000)
 
     .d-flex.align-items-center.justify-content-between.mb-4
       h2.fw-bold.text-dark.m-0
@@ -141,6 +136,4 @@ block main
               | Book a tour
 
 block script
-  script(src="https://cdn.jsdelivr.net/npm/sweetalert2@11")
-  script(src="/client/js/alert.js")
   script(src="/client/js/cart.js")

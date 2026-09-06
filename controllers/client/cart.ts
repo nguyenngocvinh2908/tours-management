@@ -1,4 +1,3 @@
-import { cartId } from './../../middlewares/client/cart';
 import { Request, Response } from 'express'
 import CartItem from '../../models/cart-item'
 import Tour from '../../models/tour'
@@ -61,30 +60,27 @@ export const index = async (req: Request, res: Response) => {
     })
   } catch(e) {
     console.log(e)
-    req.flash('error', 'Error loading cart data!')
     res.redirect('/')
   }
 }
 
 // [ POST ]: /cart/add
 export const addToCart = async (req: Request, res: Response) => {
-  const backUrl = String(req.get('Referrer'))
-
   try {
     const cartId = req.cookies.cart_id
-    const tourId = parseInt(req.body.tourId)
-    const quantity = parseInt(req.body.quantity) || 1
+    const tourId = parseInt(req.body.tourId, 10)
+    const quantity = parseInt(req.body.quantity, 10) || 1
 
     const exitsItem: any = await CartItem.findOne({
-      where: { 
-        cartId: cartId, 
+      where: {
+        cartId: cartId,
         tourId: tourId,
         deleted: false
-      } 
+      }
     })
-    
-    if (exitsItem) {
-      const newQuantity = (exitsItem.get('quantity') as number) + quantity 
+
+    if(exitsItem) {
+      const newQuantity = (exitsItem.get('quantity') as number) + quantity
       await exitsItem.update({ quantity: newQuantity })
     } else {
       await CartItem.create({
@@ -94,12 +90,24 @@ export const addToCart = async (req: Request, res: Response) => {
       })
     }
 
-    req.flash('success', 'Tour added to cart successfully!')
-    res.redirect(backUrl)
-    
-  } catch (error) {
-    req.flash('error', 'Failed to add tour to cart.')
-    res.redirect(backUrl)
+    // Tính Lại Tổng Số Lượng Trong Giỏ
+    const totalQuantity = await CartItem.sum('quantity', {
+      where: {
+        cartId: cartId,
+        deleted: false
+      }
+    }) || 0
+
+    res.json({
+      code: 200,
+      message: "Successfully added to cart!",
+      totalQuantity: totalQuantity
+    })
+  } catch {
+    res.status(500).json({
+      code: 500,
+      message: "Failed to add to cart!"
+    })
   }
 }
 
@@ -253,3 +261,4 @@ export const deleteItem = async (req: Request, res: Response): Promise<void> => 
   }
 
 }
+

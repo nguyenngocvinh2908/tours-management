@@ -1,15 +1,11 @@
 extends ../../layouts/default.pug
 include ../../mixins/moment.pug
-include ../../mixins/alert.pug
 
 block head
   link(rel="stylesheet" href="/client/css/tour-detail.css")
 
 block main
   .container.my-5
-    //- Flash Alert Mixin
-    +alert-success(3000)
-    +alert-error(3000)
     .row.g-4
       // CỘT TRÁI: Gallery Ảnh & Tabs Thông Tin
       .col-12.col-lg-8
@@ -93,7 +89,7 @@ block main
               strong.text-dark.ms-1 #{tour.stock} seats
 
           // FORM ĐẶT TOUR
-          form(action="/cart/add" method="POST")
+          form(id="form-add-to-cart" action="/cart/add" method="POST")
             input(type="hidden" name="tourId" value=tour.id)
             
             .mb-4
@@ -110,3 +106,6 @@ block main
             button.btn.btn-gradient-primary.w-100.fw-bold.fs-5(type="submit")
               i.fa-solid.fa-cart-plus.me-2
               | Add to Cart
+  
+block script
+  script(src="/client/js/addToCart.js")
