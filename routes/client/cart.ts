@@ -7,4 +7,8 @@ router.get('/', controller.index)
 
 router.post('/add', controller.addToCart)
 
+router.patch('/update-quantity', controller.updateQuantity)
+
+router.delete('/delete/:itemId', controller.deleteItem)
+
 export const CartRouter: Router = router

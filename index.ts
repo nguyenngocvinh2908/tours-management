@@ -6,6 +6,7 @@ import moment from 'moment'
 import cookieParser from 'cookie-parser'
 import session from 'express-session'
 import flash from 'express-flash'
+import methodOverride from 'method-override'
 
 // Setup Env   
 dotenv.config()
@@ -16,9 +17,13 @@ sequelize
 const app: Express = express()
 const port: Number | String = process.env.PORT || 3000
 
+
 // Setup Body Parser
-app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+
+// Setup Method Override
+app.use(methodOverride('_method'))
 
 // Setup Cookie_Parser
 app.use(cookieParser('ABBBBBAAA'))
