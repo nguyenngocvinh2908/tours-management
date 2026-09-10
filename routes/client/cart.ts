@@ -11,4 +11,8 @@ router.patch('/update-quantity', controller.updateQuantity)
 
 router.delete('/delete/:itemId', controller.deleteItem)
 
+router.post('/apply-voucher', controller.applyVoucher)
+
+router.post('/remove-voucher', controller.removeVoucher)
+
 export const CartRouter: Router = router

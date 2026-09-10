@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import CartItem from '../../models/cart-item'
 import Tour from '../../models/tour'
+import Voucher from '../../models/voucher'
 import { getFirstImage } from '../../helpers/handleImageTour'
 
 
@@ -8,6 +9,8 @@ import { getFirstImage } from '../../helpers/handleImageTour'
 export const index = async (req: Request, res: Response) => {
   try {
     const cartId = req.cookies.cart_id
+    const appliedVoucherCode = req.cookies?.voucher_code
+
     // Lấy danh sách cartItem
     const cartItems: any = await CartItem.findAll({
       where: {
@@ -30,7 +33,7 @@ export const index = async (req: Request, res: Response) => {
       const itemPlain = item.get({ plain: true })
       // Sequelize mặc định sẽ gán vào `Tour` (viết hoa) hoặc `tour` (viết thường)
       const tour = itemPlain.Tour || itemPlain.tour
-      if(!tour) return null 
+      if(!tour) return null
       
       // Get One Image In Images
       tour.images = [getFirstImage(tour.images)]
@@ -50,13 +53,54 @@ export const index = async (req: Request, res: Response) => {
       }
     }).filter(Boolean) // Loại Bỏ Null Khi Map
 
+    // 2. Tự Động Tính Số Tiền Giảm Nếu Có Cookie voucher_code
+    let discountAmount = 0
+    let validVoucherCode = ''
+
+    if(appliedVoucherCode && items.length > 0) {
+      const voucher: any = await Voucher.findOne({
+        where: {
+          code: appliedVoucherCode,
+          status: 1
+        }
+      })
+
+      const nowDate = new Date()
+      const isExpired = voucher.endDate && new Date(voucher.endDate) < nowDate // Xem Hết Hạn Chưa
+      const isNotStarted = voucher.startDate && new Date(voucher.startDate) > nowDate // Xem Bắt Đầu Chưa
+
+      if(voucher && voucher.stock > 0 && !isExpired && !isNotStarted && totalPrice >= (voucher.minOrderValue || 0)) {
+        validVoucherCode = String(voucher.code)
+
+        if(voucher.discountType === 'percent') {
+          discountAmount = Math.round((totalPrice * voucher.discountValue) / 100)
+          if (voucher.maxDiscount && discountAmount > voucher.maxDiscount) {
+            discountAmount = voucher.maxDiscount
+          }
+        } else {
+          discountAmount = voucher.discountValue
+        }
+      }
+      // Truong Hop Mua Don Hang 0 dd
+      if (discountAmount > totalPrice) {
+        discountAmount = totalPrice
+      }
+    } else {
+      res.clearCookie('voucher_code')
+    }
+
+    const finalTotal = totalPrice - discountAmount
+
     res.render('client/pages/carts/index.pug', {
       titlePage: 'My Cart',
       cart: {
         items: items,
         totalQuantity: totalQuantity,
         totalPrice: totalPrice
-      }
+      },
+      voucherCode: validVoucherCode,
+      discountAmount: discountAmount,
+      finalTotal: finalTotal > 0 ? finalTotal : 0
     })
   } catch(e) {
     console.log(e)
@@ -262,3 +306,131 @@ export const deleteItem = async (req: Request, res: Response): Promise<void> => 
 
 }
 
+// [ POST ]: /cart/apply-voucher
+export const applyVoucher = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { voucherCode } = req.body
+    const cartId = req.cookies.cart_id
+
+    if (!voucherCode) {
+      res.status(400).json({ code: 400, message: 'Please enter the discount code!' });
+      return
+    }
+
+    if(!cartId) {
+      res.status(400).json({ code: 400, message: 'The shopping cart does not exist!' })
+      return
+    }
+
+    // Truy Van Xem Code Co Ton Tai
+    const voucher: any = await Voucher.findOne({
+      where: {
+        code: voucherCode.toUpperCase(),
+        status: 1
+      }
+    })
+
+    if(!voucher) {
+      res.json({ code: 400, message: 'The discount code is invalid or has been locked!' })
+      return
+    }
+
+    // 2. Kiem Tra Stock
+    if(voucher.stock <= 0) {
+      res.json({ code: 400, message: 'This discount code has run out of uses!' })
+      return
+    }
+
+    // 3. Kuem Tra Ngay Het Han
+    const nowDate = new Date()
+    if(voucher.startDate && new Date(voucher.startDate) > nowDate) {
+      res.json({ code: 400, message: 'The discount code is not yet valid for use!' })
+      return
+    }
+
+    if(voucher.endDate && new Date(voucher.endDate) < nowDate) {
+      res.json({ code: 400, message: 'The discount code has expired!' })
+      return
+    }
+
+    // 4. Lay Tong Tien Tam Tinh
+    const cartItems: any = await CartItem.findAll({
+      where: {
+        cartId: cartId,
+        deleted: false
+      },
+      include: [
+        {
+          model: Tour,
+          attributes: ['price', 'discount']
+
+        }
+      ]
+    })
+
+    if(!cartItems || cartItems.length === 0) {
+      res.json({ code: 400, message: 'Your shopping cart is empty!' })
+      return
+    }
+
+    let subtotal = 0
+    cartItems.forEach((item: any) => {
+      const tour = item.Tour || item.tour
+      const priceSpecial = tour.discount ? Math.round(tour.price * (1 - tour.discount / 100)) : tour.price
+      subtotal += priceSpecial * item.quantity
+    })
+
+    // 5. Check Gia Tri Don Hang Toi Thieu
+    if(voucher.minOrderValue && subtotal < voucher.minOrderValue) {
+      const formattedMin = new Intl.NumberFormat('vi-VN').format(voucher.minOrderValue)
+      res.json({
+        code: 400,
+        message: `Đơn hàng tối thiểu phải đạt ${formattedMin}đ để áp dụng mã này!`
+      })
+      return
+    }
+
+    // 6. Tinh Tong So Tien Giam
+    let discountAmount = 0
+    if(voucher.discountType === 'percent') {
+      discountAmount = Math.round((subtotal * voucher.discountValue) / 100)
+    } else discountAmount = voucher.discountValue
+      // Gioi Han Muc Giam
+    if(voucher.maxDiscount && discountAmount > voucher.maxDiscount) {
+      discountAmount = voucher.maxDiscount
+    }
+
+    // Đảm Bảo Số Tiền Ko Vượt Quá Tổng Tiền Đơn Hàng
+    if(discountAmount > subtotal) discountAmount = subtotal
+
+    const totalPrice = subtotal - discountAmount
+
+    // Lưu Vào Cookies Để Dùng Khi Checkout
+    res.cookie('voucher_code', voucher.code, { httpOnly: true })
+
+    res.json({
+      code: 200,
+      message: 'Discount code applied successfully!',
+      voucherCode: voucher.code,
+      discountAmount: discountAmount,
+      subtotal: subtotal,
+      totalPrice: totalPrice
+    })
+
+  } catch {
+    res.status(500).json({ code: 500, message: 'A server error has occurred!' });
+  }
+}
+
+// [ POST ]: /cart/remove-voucher
+export const removeVoucher = async (req: Request, res: Response) => {
+  res.clearCookie('voucher_code', {
+    httpOnly: true,
+    path: '/'
+  })
+
+  res.json({
+    code: 200,
+    message: 'Voucher removed successfully!'
+  })
+}

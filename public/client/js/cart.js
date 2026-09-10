@@ -135,4 +135,71 @@ document.addEventListener('DOMContentLoaded', () => {
       })
     })
   }
+
+  // Event Apply Voucher
+  const inputVoucher = document.querySelector('#inputVoucher')
+  const btnApplyVoucher = document.querySelector('#btnApplyVoucher')
+  const cartSubtotalEl = document.querySelector('#cartSubtotal')
+  const cartDiscountEl = document.querySelector('#cartDiscount')
+  const cartTotalEl = document.querySelector('#cartTotal')
+
+  if(btnApplyVoucher && inputVoucher) {
+    btnApplyVoucher.addEventListener('click', async () => {
+      // 1. Xử Lý Hủy Voucher (Nếu Nút Ở Trạng Thái Cancel)
+      if(btnApplyVoucher.classList.contains('btn-applied')) {
+        inputVoucher.value = ''
+        inputVoucher.readOnly = false
+        btnApplyVoucher.textContent = 'Apply'
+        btnApplyVoucher.className = 'btn btn-outline-primary'
+
+        // Khôi Phục Lại Tổng Tiền
+        const restoreTotal = parseInt(cartSubtotalEl.getAttribute('data-value'))
+        cartDiscountEl.textContent = '0đ'
+        cartTotalEl.textContent = formatCurrency(restoreTotal)
+        // Fetch API Xóa Cookies
+        await fetch('/cart/remove-voucher', { method: 'POST' })
+        return
+      }
+
+      // 2. Xử Lý Áp Dụng Voucher
+      const voucherCode = inputVoucher.value.trim()
+      if(!voucherCode) {
+        showToast('Please enter the discount code!', 'warning')
+        return
+      }
+      // Gửi API Lên Server
+      try {
+        btnApplyVoucher.disabled = true
+
+        const response = await fetch('/cart/apply-voucher', {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json' 
+          },
+          body: JSON.stringify({ voucherCode })
+        })
+
+        const data = await response.json()
+        btnApplyVoucher.disabled = false
+
+        if(data.code === 200) {
+          showToast(data.message || 'Voucher applied successfully!')
+
+          // Update Money
+          cartDiscountEl.textContent = `-${formatCurrency(data.discountAmount)}`
+          cartTotalEl.textContent = formatCurrency(data.totalPrice)
+
+          inputVoucher.readOnly = true
+          btnApplyVoucher.textContent = 'Cancel'
+          btnApplyVoucher.className = 'btn btn-outline-danger btn-applied'
+        } else {
+          showAlert2('Error', data.message)
+        }
+      } catch {
+        btnApplyVoucher.disabled = false
+        showAlert2('Error Server', 'An error occurred; please try again!')
+      }
+    })
+  }
 })
+

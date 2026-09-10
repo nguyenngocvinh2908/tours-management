@@ -23,7 +23,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         const badgeEl = document.querySelector('.badge-mini')
         if(badgeEl) badgeEl.textContent = data.totalQuantity
-        else showAlert2('Error', data.message)
 
       } catch(e) {
         console.log(e)
