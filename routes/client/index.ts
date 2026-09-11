@@ -4,6 +4,7 @@ import { CategoryRouter } from './category'
 import { SearchRouter } from './search'
 import { CartRouter } from './cart'
 import { cartId } from '../../middlewares/client/cart'
+import { CheckoutRouter } from './checkout'
 
 const clientRoutes = (app: Express) => {
   app.use(cartId)
@@ -15,6 +16,8 @@ const clientRoutes = (app: Express) => {
   app.use('/search', SearchRouter)
 
   app.use('/cart', CartRouter)
+
+  app.use('/checkout', CheckoutRouter)
 }
 
 export default clientRoutes

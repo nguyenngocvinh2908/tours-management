@@ -1,0 +1,155 @@
+extends ../../layouts/default.pug
+
+block head
+  link(rel="stylesheet" href="/client/css/checkout.css")
+
+block main
+  .container.my-5
+    .checkout-header.mb-4
+      h2.fw-bold.text-dark.m-0
+        i.fa-solid.fa-shield-halved.me-2.text-primary
+        | Complete Your Booking
+      p.text-muted.mt-1 Please fill in your contact information and select a payment option.
+
+    form#formCheckout(action="/checkout/order" method="POST")
+      .row.g-4
+        // CỘT TRÁI: THÔNG TIN KHÁCH HÀNG & THANH TOÁN
+        .col-12.col-lg-7
+          .card.checkout-card.border-0.shadow-sm.rounded-4.mb-4
+            .card-body.p-4
+              h5.card-title.fw-bold.text-dark.mb-3
+                i.fa-solid.fa-user.me-2.text-primary
+                | Contact Information
+              
+              .row.g-3
+                .col-12
+                  label.form-label.fw-semibold(for="fullName") Full Name 
+                    span.text-danger *
+                  input.form-control.form-control-lg#fullName(
+                    type="text"
+                    name="fullName"
+                    placeholder="e.g. Nguyen Van A"
+                    required
+                  )
+
+                .col-md-6
+                  label.form-label.fw-semibold(for="phone") Phone Number 
+                    span.text-danger *
+                  input.form-control.form-control-lg#phone(
+                    type="tel"
+                    name="phone"
+                    placeholder="e.g. 0987654321"
+                    required
+                  )
+
+                .col-md-6
+                  label.form-label.fw-semibold(for="email") Email Address 
+                    span.text-danger *
+                  input.form-control.form-control-lg#email(
+                    type="email"
+                    name="email"
+                    placeholder="e.g. example@gmail.com"
+                    required
+                  )
+
+                .col-12
+                  label.form-label.fw-semibold(for="address") Address
+                  input.form-control.form-control-lg#address(
+                    type="text"
+                    name="address"
+                    placeholder="e.g. 123 Street Name, Ward, District, City"
+                  )
+
+                .col-12
+                  label.form-label.fw-semibold(for="note") Special Requests / Note
+                  textarea.form-control#note(
+                    name="note"
+                    rows="3"
+                    placeholder="Notes for tour guide, dietary requirements, etc."
+                  )
+
+          // Phương thức thanh toán
+          .card.checkout-card.border-0.shadow-sm.rounded-4
+            .card-body.p-4
+              h5.card-title.fw-bold.text-dark.mb-3
+                i.fa-solid.fa-credit-card.me-2.text-primary
+                | Payment Method
+
+              .payment-options.d-flex.flex-column.gap-3
+                label.payment-option-card.d-flex.align-items-center.p-3.rounded-3
+                  input.form-check-input.me-3(
+                    type="radio"
+                    name="paymentMethod"
+                    value="cash"
+                    checked
+                  )
+                  .d-flex.align-items-center.justify-content-between.w-100
+                    div
+                      .fw-bold.text-dark Pay at Office / Cash
+                      .small.text-muted Pay cash upon receiving physical tickets or at office
+                    i.fa-solid.fa-money-bill-wave.fs-4.text-success
+
+                label.payment-option-card.d-flex.align-items-center.p-3.rounded-3
+                  input.form-check-input.me-3(
+                    type="radio"
+                    name="paymentMethod"
+                    value="bank_transfer"
+                  )
+                  .d-flex.align-items-center.justify-content-between.w-100
+                    div
+                      .fw-bold.text-dark Bank Transfer (VietQR)
+                      .small.text-muted Scan VietQR code for instant payment processing
+                    i.fa-solid.fa-qrcode.fs-4.text-primary
+
+        // CỘT PHẢI: TÓM TẮT ĐƠN HÀNG THỰC TẾ
+        .col-12.col-lg-5
+          .card.checkout-summary-card.border-0.shadow-sm.rounded-4.p-4.sticky-top(style="top: 30px; z-index: 10;")
+            h5.fw-bold.text-dark.mb-3 Order Review
+
+            .checkout-items.mb-3
+              each item in cart.items
+                .d-flex.align-items-center.gap-3.py-2.border-bottom
+                  img.rounded-3.object-fit-cover.shadow-sm(
+                    src=item.tour.images[0]
+                    alt=item.tour.title
+                    style="width: 65px; height: 50px;"
+                  )
+                  .flex-grow-1
+                    .fw-bold.text-dark.line-clamp-1.small= item.tour.title
+                    .text-muted.extra-small Qty: x#{item.quantity}
+                  .text-end
+                    .fw-bold.text-danger.small #{item.totalPrice.toLocaleString('vi-VN')}đ
+
+            .summary-details.py-2
+              .d-flex.justify-content-between.align-items-center.mb-2
+                span.text-muted.small Subtotal
+                span.fw-bold.text-dark #{cart.subtotal.toLocaleString('vi-VN')}đ
+
+              .d-flex.justify-content-between.align-items-center.mb-2
+                span.text-muted.small Voucher Discount
+                span.fw-bold.text-success
+                  if discountAmount > 0
+                    | -#{discountAmount.toLocaleString('vi-VN')}đ
+                  else
+                    | 0đ
+
+              if voucherCode
+                .alert.alert-success.d-flex.align-items-center.py-2.px-3.rounded-3.mb-2
+                  i.fa-solid.fa-ticket.me-2
+                  span.small Voucher Applied: 
+                    strong.ms-1= voucherCode
+
+              hr.my-2.text-muted.opacity-25
+
+              .d-flex.justify-content-between.align-items-center.my-3
+                span.fw-bold.fs-6.text-dark Total Amount
+                .text-end
+                  .fw-bold.fs-3.text-danger #{finalTotal.toLocaleString('vi-VN')}đ
+                  .text-muted.extra-small (VAT included)
+
+            button.btn.btn-gradient-primary.w-100.py-3.fw-bold.rounded-3.shadow-sm.fs-6#btnSubmitOrder(type="submit")
+              i.fa-solid.fa-check-circle.me-2
+              | Confirm & Pay
+
+block script
+  script(src="/client/js/checkout.js")

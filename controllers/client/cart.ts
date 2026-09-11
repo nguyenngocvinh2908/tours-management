@@ -2,7 +2,8 @@ import { Request, Response } from 'express'
 import CartItem from '../../models/cart-item'
 import Tour from '../../models/tour'
 import Voucher from '../../models/voucher'
-import { getFirstImage } from '../../helpers/handleImageTour'
+import { formatCartData } from '../../helpers/formatCartData'
+import { formatVoucherData } from '../../helpers/formatVoucherData'
 
 
 // [ GET ]: /cart
@@ -25,71 +26,10 @@ export const index = async (req: Request, res: Response) => {
       ]
     })
 
-    let totalQuantity = 0
-    let totalPrice = 0
-    
-    // Xử Lý Tính Toán Giá Trị Thực Tế Và Tổng Tiền
-    const items = cartItems.map((item: any) => {
-      const itemPlain = item.get({ plain: true })
-      // Sequelize mặc định sẽ gán vào `Tour` (viết hoa) hoặc `tour` (viết thường)
-      const tour = itemPlain.Tour || itemPlain.tour
-      if(!tour) return null
-      
-      // Get One Image In Images
-      tour.images = [getFirstImage(tour.images)]
-      // Get Price Alter Discount Tour
-      const priceSpecial = tour.discount ? Math.round(tour.price * (1 - tour.discount / 100)) : tour.price
-      const itemTotalPrice = priceSpecial * item.quantity
-
-      totalQuantity += item.quantity
-      totalPrice += itemTotalPrice
-
-      return {
-        id: item.id,
-        quantity: item.quantity,
-        priceSpecial: priceSpecial,
-        totalPrice: itemTotalPrice,
-        tour: tour
-      }
-    }).filter(Boolean) // Loại Bỏ Null Khi Map
+    const { items, totalPrice, totalQuantity } = formatCartData(cartItems)
 
     // 2. Tự Động Tính Số Tiền Giảm Nếu Có Cookie voucher_code
-    let discountAmount = 0
-    let validVoucherCode = ''
-
-    if(appliedVoucherCode && items.length > 0) {
-      const voucher: any = await Voucher.findOne({
-        where: {
-          code: appliedVoucherCode,
-          status: 1
-        }
-      })
-
-      const nowDate = new Date()
-      const isExpired = voucher.endDate && new Date(voucher.endDate) < nowDate // Xem Hết Hạn Chưa
-      const isNotStarted = voucher.startDate && new Date(voucher.startDate) > nowDate // Xem Bắt Đầu Chưa
-
-      if(voucher && voucher.stock > 0 && !isExpired && !isNotStarted && totalPrice >= (voucher.minOrderValue || 0)) {
-        validVoucherCode = String(voucher.code)
-
-        if(voucher.discountType === 'percent') {
-          discountAmount = Math.round((totalPrice * voucher.discountValue) / 100)
-          if (voucher.maxDiscount && discountAmount > voucher.maxDiscount) {
-            discountAmount = voucher.maxDiscount
-          }
-        } else {
-          discountAmount = voucher.discountValue
-        }
-      }
-      // Truong Hop Mua Don Hang 0 dd
-      if (discountAmount > totalPrice) {
-        discountAmount = totalPrice
-      }
-    } else {
-      res.clearCookie('voucher_code')
-    }
-
-    const finalTotal = totalPrice - discountAmount
+    const { validVoucherCode, discountAmount, finalTotal } = await formatVoucherData(res, items, appliedVoucherCode, totalPrice)
 
     res.render('client/pages/carts/index.pug', {
       titlePage: 'My Cart',
@@ -100,7 +40,7 @@ export const index = async (req: Request, res: Response) => {
       },
       voucherCode: validVoucherCode,
       discountAmount: discountAmount,
-      finalTotal: finalTotal > 0 ? finalTotal : 0
+      finalTotal: finalTotal
     })
   } catch(e) {
     console.log(e)
