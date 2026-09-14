@@ -5,4 +5,6 @@ const router: Router = Router()
 
 router.get('/', controller.index)
 
+router.post('/order', controller.orderPost)
+
 export const CheckoutRouter: Router = router

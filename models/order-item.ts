@@ -40,7 +40,7 @@ const OrderItem = sequelize.define('OrderItem', {
   }
 }, {
   tableName: 'orders_item',
-  timestamps: false,
+  timestamps: true,
 })
 
 // Quan hệ N - 1: Mỗi OrderItem thuộc về một Tour

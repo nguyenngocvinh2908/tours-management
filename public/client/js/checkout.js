@@ -34,8 +34,21 @@ document.addEventListener('DOMContentLoaded', () => {
         })
 
         const result = await response.json()
+
+        // 4. Xử lý Phản Hồ Từ Server
+        if(result.code === 200) {
+          window.location.href = `/checkout/success/${result.orderCode}`
+        } else {
+          btnSubmitOrder.disabled = false
+          btnSubmitOrder.innerHTML = originalBtnContent
+          const errorMessage = encodeURIComponent(result.message || 'Tour booking failed!')
+          window.location.href = `/checkout/error?message=${errorMessage}`
+        }
       } catch {
-        
+        btnSubmitOrder.disabled = false
+        btnSubmitOrder.innerHTML = originalBtnContent
+        const errorMessage = encodeURIComponent('The system is experiencing a connection issue; please try again!')
+        window.location.href = `/checkout/error?message=${errorMessage}`
       }
     })
   }
