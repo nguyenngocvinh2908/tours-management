@@ -1,0 +1,16 @@
+extends ../../layouts/default.pug
+
+block main
+  .container.my-5.text-center
+    .card.border-0.shadow-sm.rounded-4.p-4.mx-auto(style="max-width: 550px;")
+      .card-body
+        .mb-3
+          i.fa-solid.fa-circle-xmark.text-danger(style="font-size: 4rem;")
+        h2.fw-bold.text-dark Booking Failed
+        p.text-muted.my-3= message
+
+        .d-flex.justify-content-center.gap-3.mt-4
+          a.btn.btn-primary.rounded-3.px-4(href="/cart")
+            i.fa-solid.fa-cart-shopping.me-2
+            | Return to Cart
+          a.btn.btn-outline-secondary.rounded-3.px-4(href="/") Back to Home

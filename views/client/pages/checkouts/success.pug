@@ -1,0 +1,44 @@
+extends ../../layouts/default.pug
+
+block main
+  .container.my-5.text-center
+    .card.border-0.shadow-sm.rounded-4.p-4.mx-auto(style="max-width: 650px;")
+      .card-body
+        .mb-3
+          i.fa-solid.fa-circle-check.text-success(style="font-size: 4rem;")
+        h2.fw-bold.text-dark Booking Confirmed!
+        p.text-muted Thank you for your booking. We have received your order details.
+
+        .alert.alert-light.border.rounded-3.my-4.text-start.p-3
+          .d-flex.justify-content-between.mb-2
+            span.text-muted Order Code:
+            strong.text-primary ##{order.code}
+          .d-flex.justify-content-between.mb-2
+            span.text-muted Customer Name:
+            strong #{order.fullName}
+          .d-flex.justify-content-between.mb-2
+            span.text-muted Payment Method:
+            strong.text-uppercase #{order.paymentMethod}
+          .d-flex.justify-content-between.mb-0
+            span.text-muted Total Paid:
+            strong.text-danger.fs-5 #{order.totalPrice.toLocaleString('vi-VN')}đ
+
+        if order.paymentMethod === 'bank_transfer'
+          .bank-info.alert.alert-info.text-start.mb-4
+            h6.fw-bold.mb-2
+              i.fa-solid.fa-qrcode.me-2
+              | Bank Transfer Instructions (VietQR)
+            p.small.mb-1 Please transfer the exact amount using your Order Code as reference:
+            ul.small.mb-0.ps-3
+              li Bank: 
+                strong MBBank
+              li Account No: 
+                strong 0999999999
+              li Account Name: 
+                strong CONG TY DU LICH
+              li Content: 
+                strong #{order.code}
+
+        .d-flex.justify-content-center.gap-3.mt-4
+          a.btn.btn-outline-secondary.rounded-3.px-4(href="/tours") Continue Exploring
+          a.btn.btn-primary.rounded-3.px-4(href="/") Back to Home

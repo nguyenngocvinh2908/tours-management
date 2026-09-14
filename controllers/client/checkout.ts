@@ -157,3 +157,34 @@ export const orderPost = async (req: Request, res: Response) => {
     res.status(500).json({ code: 500, message: 'An error occurred while creating the order!' })
   }
 }
+
+// [ GET ] "/checkout/success/:orderCode"
+export const successPage = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { orderCode } = req.params
+    const order: any = await Order.findOne({
+      where: { code: orderCode, deleted: false }
+    })
+
+    if(!order) {
+      const message = encodeURIComponent('Order not found')
+      return res.redirect(`/checkout/error?message=${message}`)
+    }
+
+    res.render('client/pages/checkouts/success.pug', {
+      titlePage: 'Booking Successful',
+      order: order
+    })
+  } catch {
+    res.redirect('/checkout/error')
+  }
+}
+
+// [GET] /checkout/error
+export const errorPage = (req: Request, res: Response): void => {
+  const errorMessage = (req.query.message as string) || 'Something went wrong during checkout process.'  
+  res.render('client/pages/checkouts/error.pug', {
+    titlePage: 'Booking Failed',
+    message: errorMessage
+  })
+}
