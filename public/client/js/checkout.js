@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', () => {
       // 1. Thu Nhap Du Lieu Tu Form
       const formData = new FormData(formCheckout)
       const data = Object.fromEntries(formData.entries())
-      console.log(data)
 
       // Validate cơ bản phía client
       if (!data.fullName?.trim() || !data.phone?.trim() || !data.email?.trim() || !data.address?.trim()) {

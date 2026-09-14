@@ -6,6 +6,7 @@ import { formatCartData } from '../../helpers/formatCartData'
 import { formatVoucherData } from '../../helpers/formatVoucherData'
 import OrderItem from '../../models/order-item'
 import sequelize from '../../config/database'
+import Voucher from '../../models/voucher'
 
 // [ GET ] "/checkout"
 export const index = async (req: Request, res: Response) => {
@@ -130,22 +131,25 @@ export const orderPost = async (req: Request, res: Response) => {
       })
       await OrderItem.bulkCreate(orderItemsData, { transaction })
 
-      // 5. Cap Nhat Ton Kho Va Huy Don Hang
+      // 5. Cap Nhat Ton Kho, Voucher Va Huy Don Hang
       for(const item of items) {
         await Tour.decrement('stock', { by: item?.quantity, where: { id: item?.tour.id }, transaction})
       }
       await CartItem.destroy({ where: { cartId: cartId }, transaction })
 
+      
+      if(appliedVoucherCode) {
+        await Voucher.decrement('stock', { by: 1, where: { code: appliedVoucherCode}, transaction})
+      }
       await transaction.commit()
-
-      res.clearCookie('voucher_code')
-
+      if(appliedVoucherCode) res.clearCookie('voucher_code')
       res.json({
         code: 200,
         message: 'Order placed successfully!',
         orderCode: orderCode
       })
-    } catch {
+
+    } catch(error) {
       await transaction.rollback()
       res.status(500).json({
         code: 500,
@@ -153,7 +157,7 @@ export const orderPost = async (req: Request, res: Response) => {
       })
     }
 
-  } catch {
+  } catch(error) {
     res.status(500).json({ code: 500, message: 'An error occurred while creating the order!' })
   }
 }
@@ -162,9 +166,12 @@ export const orderPost = async (req: Request, res: Response) => {
 export const successPage = async (req: Request, res: Response): Promise<void> => {
   try {
     const { orderCode } = req.params
+    console.log(orderCode)
     const order: any = await Order.findOne({
       where: { code: orderCode, deleted: false }
     })
+
+    console.log(order)
 
     if(!order) {
       const message = encodeURIComponent('Order not found')
