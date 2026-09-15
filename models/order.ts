@@ -37,6 +37,10 @@ const Order = sequelize.define('Order', {
     type: DataTypes.STRING(20),
     defaultValue: 'unpaid',
   },
+  expireAt: {
+    type: DataTypes.DATE,
+    allowNull: true
+  },
   voucherCode: {
     type: DataTypes.STRING(50),
     allowNull: true,

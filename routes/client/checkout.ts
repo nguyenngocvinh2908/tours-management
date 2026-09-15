@@ -11,4 +11,6 @@ router.get('/success/:orderCode', controller.successPage)
 
 router.get('/error', controller.errorPage)
 
+router.get('/check-status/:orderCode', controller.checkOrderStatus)
+
 export const CheckoutRouter: Router = router

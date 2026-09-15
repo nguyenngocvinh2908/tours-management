@@ -4,6 +4,7 @@ import Tour from '../../models/tour'
 import Order from '../../models/order'
 import { formatCartData } from '../../helpers/formatCartData'
 import { formatVoucherData } from '../../helpers/formatVoucherData'
+import { BANK_CONFIG } from '../../config/bank'
 import OrderItem from '../../models/order-item'
 import sequelize from '../../config/database'
 import Voucher from '../../models/voucher'
@@ -96,6 +97,10 @@ export const orderPost = async (req: Request, res: Response) => {
     // 2. Tạo Mã Code Order
     const orderCode = `ODR${Date.now()}${Math.floor(Math.random() * 1000)}`
 
+    // Tính Thời Gian 5p Cho Đơn Hàng Bank
+    let expireAt = null
+    if(paymentMethod == 'bank_transfer') expireAt = new Date(Date.now() + 1 * 60 * 1000)
+
     // 2.1 Tạo 1 transaction
     const transaction = await sequelize.transaction()
     try {
@@ -109,6 +114,7 @@ export const orderPost = async (req: Request, res: Response) => {
         note,
         paymentMethod: paymentMethod || 'cash',
         paymentStatus: 'unpaid',
+        expireAt: expireAt,
         status: 'initial',
         discountAmount,
         totalPrice: finalTotal,
@@ -171,27 +177,72 @@ export const successPage = async (req: Request, res: Response): Promise<void> =>
       where: { code: orderCode, deleted: false }
     })
 
-    console.log(order)
-
     if(!order) {
       const message = encodeURIComponent('Order not found')
       return res.redirect(`/checkout/error?message=${message}`)
     }
+    
+    // 2. Tính Năng Thank Toán QR
+    let qrCodeUrl = ''
+    if(order.paymentMethod === 'bank_transfer') {
+      const bankId = BANK_CONFIG.BANK_ID
+      const accountNo = BANK_CONFIG.ACCOUNT_NO
+      const template = BANK_CONFIG.TEMPLATE
+      const amount = order.totalPrice
+      const addInfo = encodeURIComponent(order.code) // Nội dung chuyển khoản là mã đơn
+      const accountName = encodeURIComponent(BANK_CONFIG.ACCOUNT_NAME)
+      qrCodeUrl = `https://img.vietqr.io/image/${bankId}-${accountNo}-${template}.png?amount=${amount}&addInfo=${addInfo}&accountName=${accountName}`
+    }
 
     res.render('client/pages/checkouts/success.pug', {
       titlePage: 'Booking Successful',
-      order: order
+      order: order,
+      qrCodeUrl: qrCodeUrl, // Truyền URL sang Pug
+      bankInfo: BANK_CONFIG
     })
   } catch {
     res.redirect('/checkout/error')
   }
 }
 
-// [GET] /checkout/error
+// [GET] "/checkout/error"
 export const errorPage = (req: Request, res: Response): void => {
   const errorMessage = (req.query.message as string) || 'Something went wrong during checkout process.'  
   res.render('client/pages/checkouts/error.pug', {
     titlePage: 'Booking Failed',
     message: errorMessage
   })
+}
+
+// [ GET ] "/checkout/check-status/:orderCode"
+export const checkOrderStatus = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { orderCode } = req.params
+    const order: any = Order.findOne({
+      where: { code: orderCode, deleted: false },
+      attributes: [ 'code', 'paymentStatus', 'expireAt', 'status' ]
+    })
+
+    if(!order) {
+      res.json({ code: 404, message: 'Order Not Found!'})
+      return
+    }
+
+    const now = new Date()
+    const isExpired = order.expireAt && new Date(order.expireAt) < now
+    // Nếu đã hết 5 phút mà vẫn chưa thanh toán -> Cập nhật trạng thái đơn thành cancelled
+    if(isExpired && order.paymentStatus === 'unpaid' && order.status !== 'cancelled') {
+      await order.update({ status: 'cancelled' })
+    }
+
+    res.json({
+      code: 200,
+      paymentStatus: order.paymentStatus, // 'unpaid' hoặc 'paid'
+      isExpired: isExpired,
+      status: order.status
+    })
+
+  } catch {
+    res.status(500).json({ code: 500, message: 'Server error' })
+  }
 }

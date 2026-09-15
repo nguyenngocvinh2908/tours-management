@@ -1,44 +1,83 @@
 extends ../../layouts/default.pug
 
 block main
-  .container.my-5.text-center
-    .card.border-0.shadow-sm.rounded-4.p-4.mx-auto(style="max-width: 650px;")
-      .card-body
-        .mb-3
-          i.fa-solid.fa-circle-check.text-success(style="font-size: 4rem;")
-        h2.fw-bold.text-dark Booking Confirmed!
-        p.text-muted Thank you for your booking. We have received your order details.
+  .container.my-5
+    .card.border-0.shadow-lg.rounded-4.overflow-hidden.mx-auto(style="max-width: 580px;")
+      // Card Header
+      .card-header.bg-primary.bg-gradient.text-white.text-center.py-4.border-0
+        .mb-2
+          i.fa-solid.fa-shield-halved.fs-1
+        h4.fw-bold.mb-0 Checkout Status
 
-        .alert.alert-light.border.rounded-3.my-4.text-start.p-3
-          .d-flex.justify-content-between.mb-2
-            span.text-muted Order Code:
-            strong.text-primary ##{order.code}
-          .d-flex.justify-content-between.mb-2
-            span.text-muted Customer Name:
-            strong #{order.fullName}
-          .d-flex.justify-content-between.mb-2
-            span.text-muted Payment Method:
-            strong.text-uppercase #{order.paymentMethod}
-          .d-flex.justify-content-between.mb-0
-            span.text-muted Total Paid:
-            strong.text-danger.fs-5 #{order.totalPrice.toLocaleString('vi-VN')}đ
+      // Card Body Container
+      .card-body.p-4.p-md-5.text-center#orderContainer(
+        data-order-code=order.code 
+        data-expire-at=order.expireAt ? order.expireAt.toISOString() : '' 
+        data-payment-status=order.paymentStatus
+      )
+        // 1. ĐÃ THANH TOÁN (PAID)
+        if order.paymentStatus === 'paid'
+          .status-box.py-3
+            .icon-wrapper.bg-success-subtle.text-success.rounded-circle.d-inline-flex.align-items-center.justify-content-center.mb-3(style="width: 80px; height: 80px;")
+              i.fa-solid.fa-check.fs-1
+            h3.fw-bold.text-dark Payment Successful!
+            p.text-muted Your booking 
+              strong.text-primary ##{order.code}
+              |  has been confirmed.
 
-        if order.paymentMethod === 'bank_transfer'
-          .bank-info.alert.alert-info.text-start.mb-4
-            h6.fw-bold.mb-2
-              i.fa-solid.fa-qrcode.me-2
-              | Bank Transfer Instructions (VietQR)
-            p.small.mb-1 Please transfer the exact amount using your Order Code as reference:
-            ul.small.mb-0.ps-3
-              li Bank: 
-                strong MBBank
-              li Account No: 
-                strong 0999999999
-              li Account Name: 
-                strong CONG TY DU LICH
-              li Content: 
-                strong #{order.code}
+          // 2. CHỜ THANH TOÁN (UNPAID - BANK TRANSFER)
+        else if order.paymentMethod === 'bank_transfer'
+          .status-box.py-2#pendingState
+            .d-flex.align-items-center.justify-content-center.gap-2.mb-1
+              span.spinner-grow.spinner-grow-sm.text-warning(role="status")
+              h4.fw-bold.text-dark.mb-0#statusTitle Awaiting Payment...
+            p.text-muted.small Scan QR code with any banking app to complete payment.
 
-        .d-flex.justify-content-center.gap-3.mt-4
-          a.btn.btn-outline-secondary.rounded-3.px-4(href="/tours") Continue Exploring
-          a.btn.btn-primary.rounded-3.px-4(href="/") Back to Home
+            // Modern Timer Badge
+            .timer-badge.d-inline-flex.align-items-center.gap-2.bg-danger-subtle.text-danger.px-3.py-2.rounded-pill.my-3#timerContainer
+              i.fa-regular.fa-clock.fs-6
+              span.small.fw-semibold Expire in:
+              span.fw-bold.font-monospace.fs-6#countdownTimer --:--
+
+            // QR Code Container
+            .qr-wrapper.bg-light.p-3.rounded-4.border.shadow-sm.my-3#qrSection
+              .text-center
+                img.img-fluid.rounded-3.bg-white.p-2.border#qrImage(
+                  src=qrCodeUrl
+                  alt="VietQR Payment Code"
+                  style="max-width: 240px;"
+                )
+              
+              // Payment Information Details
+              .bank-info-box.bg-white.rounded-3.p-3.border.mt-3.text-start.small
+                .d-flex.justify-content-between.align-items-center.mb-2.pb-2.border-bottom
+                  span.text-muted Amount Due:
+                  strong.text-danger.fs-6 #{order.totalPrice.toLocaleString('vi-VN')} đ
+                .d-flex.justify-content-between.align-items-center
+                  span.text-muted Transfer Content:
+                  .d-flex.align-items-center.gap-2
+                    strong.text-primary.font-monospace#orderCodeText= order.code
+                    button.btn.btn-sm.btn-light.p-1.py-0.border(type="button" onclick=`navigator.clipboard.writeText('${order.code}')`)
+                      i.fa-regular.fa-copy.small
+
+          // 3. THANH TOÁN TIỀN MẶT (CASH)
+        else
+          .status-box.py-3
+            .icon-wrapper.bg-primary-subtle.text-primary.rounded-circle.d-inline-flex.align-items-center.justify-content-center.mb-3(style="width: 80px; height: 80px;")
+              i.fa-solid.fa-receipt.fs-1
+            h3.fw-bold.text-dark Booking Order Created!
+            p.text-muted Your order 
+              strong.text-primary ##{order.code}
+              |  has been placed successfully. Please pay upon arrival.
+
+        // Action Buttons
+        .d-flex.flex-column.flex-sm-row.justify-content-center.gap-2.mt-4.pt-2.border-top
+          a.btn.btn-outline-secondary.rounded-3.px-4.py-2(href="/tours")
+            i.fa-solid.fa-compass.me-2
+            | Explore Tours
+          a.btn.btn-primary.rounded-3.px-4.py-2(href="/")
+            i.fa-solid.fa-house.me-2
+            | Back to Home
+
+block script
+  script(src="/client/js/payment-status.js")
