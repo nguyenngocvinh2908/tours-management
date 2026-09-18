@@ -1,0 +1,26 @@
+doctype html
+html(lang="vi")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title #{titlePage}
+    link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css")
+    link(rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css")
+    link(rel="stylesheet" href="/client/css/auth.css")
+
+  body
+    .auth-wrapper
+      .auth-banner
+        .banner-content
+          a.auth-logo(href="/")
+            i.fa-solid.fa-paper-plane
+            span Tour Booking
+          h1 Explore the World Your Way
+          p Experience wonderful journeys with top-quality service.
+      .auth-main
+        .auth-card
+          block main
+
+    script(src="https://cdn.jsdelivr.net/npm/sweetalert2@11")
+    script(src="/client/js/auth.js")
+    script(src="/client/js/alert.js")

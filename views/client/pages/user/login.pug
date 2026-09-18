@@ -1,0 +1,21 @@
+extends ../../layouts/auth.pug
+
+block main
+  .auth-header
+    h2.auth-title Sign In
+    p.auth-subtitle Welcome back!
+
+  form#form-login.auth-form
+    .form-group
+      label(for="email") Email
+      input#email.form-control(type="email" name="email" placeholder="name@example.com")
+
+    .form-group
+      label(for="password") Password
+      input#password.form-control(type="password" name="password" placeholder="••••••••")
+
+    button.btn-submit(type="submit") Sign In
+
+  .auth-footer
+    p Don't have an account?
+      a(href="/user/register") Sign up now

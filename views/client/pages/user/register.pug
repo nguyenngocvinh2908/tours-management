@@ -1,0 +1,29 @@
+extends ../../layouts/auth.pug
+
+block main
+  .auth-header
+    h2.auth-title Create a new account
+    p.auth-subtitle Enter the information below to start the experience.
+
+  form#form-register.auth-form
+    .form-group
+      label(for="fullName") FullName
+      input#fullName.form-control(type="text" name="fullName" placeholder="Nguyễn Văn A")
+
+    .form-group
+      label(for="email") Email
+      input#email.form-control(type="email" name="email" placeholder="name@example.com")
+
+    .form-group
+      label(for="phone") Phone
+      input#phone.form-control(type="tel" name="phone" placeholder="0987654321")
+
+    .form-group
+      label(for="password") Password
+      input#password.form-control(type="password" name="password" placeholder="••••••••")
+
+    button.btn-submit(type="submit") Sign up
+
+  .auth-footer
+    p Already have an account? 
+      a(href="/user/login") Log in here

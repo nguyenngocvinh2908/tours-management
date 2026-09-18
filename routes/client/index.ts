@@ -5,9 +5,12 @@ import { SearchRouter } from './search'
 import { CartRouter } from './cart'
 import { cartId } from '../../middlewares/client/cart'
 import { CheckoutRouter } from './checkout'
+import { UserRouter } from './user'
 
 const clientRoutes = (app: Express) => {
   app.use(cartId)
+
+  app.use('/user', UserRouter)
 
   app.use('/tours', TourRouter)
 
