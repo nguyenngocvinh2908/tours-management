@@ -3,12 +3,17 @@ import { TourRouter } from './tour'
 import { CategoryRouter } from './category'
 import { SearchRouter } from './search'
 import { CartRouter } from './cart'
-import { cartId } from '../../middlewares/client/cart'
 import { CheckoutRouter } from './checkout'
 import { UserRouter } from './user'
 
+import { cartId } from '../../middlewares/client/cart'
+import * as auth from '../../middlewares/client/auth'
+
+
 const clientRoutes = (app: Express) => {
   app.use(cartId)
+  
+  app.use(auth.infoUser)
 
   app.use('/user', UserRouter)
 
@@ -20,7 +25,7 @@ const clientRoutes = (app: Express) => {
 
   app.use('/cart', CartRouter)
 
-  app.use('/checkout', CheckoutRouter)
+  app.use('/checkout', auth.requireAuth , CheckoutRouter)
 }
 
 export default clientRoutes
