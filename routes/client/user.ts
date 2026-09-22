@@ -12,5 +12,7 @@ router.get('/login', auth.checkGuest, controller.login)
 
 router.post('/login', auth.checkGuest, controller.loginPost)
 
+router.get('/logout', auth.requireAuth, controller.logout)
+
 
 export const UserRouter: Router = router

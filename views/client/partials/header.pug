@@ -40,9 +40,9 @@ header.main-header.sticky-top
           li.nav-item
             a.nav-link(href="/tours" class=(currentPath === '/tours' ? 'active' : '')) Tour All
 
-        .d-flex.align-items-center.gap-3
-          // Cart Icon with Quantity Badge
-          a.btn.btn-outline-primary.position-relative.rounded-circle.p-0.d-flex.align-items-center.justify-content-center(
+        .d-flex.align-items-center.gap-3.ms-lg-3
+          // Cart Icon với Badge
+          a.btn.btn-outline-primary.position-relative.rounded-circle.p-0.d-flex.align-items-center.justify-content-center.flex-shrink-0(
             href="/cart"
             style="width: 40px; height: 40px;"
             title="Shopping Cart"
@@ -51,6 +51,64 @@ header.main-header.sticky-top
             span.position-absolute.top-0.start-100.translate-middle.badge.rounded-pill.bg-danger.badge-mini
               | #{miniCartQuantity}
 
-          //- Sign In / Sign Up Buttons
-          a.btn.btn-outline-custom(href="/user/login") Sign In
-          a.btn.btn-primary-custom(href="/user/register") Sign Up
+          if user
+            // Chỉ hiển thị Avatar (Thêm ms-2 để giãn cách thêm với Cart)
+            .dropdown.ms-2
+              .d-flex.align-items-center.style-pointer(
+                data-bs-toggle="dropdown" 
+                aria-expanded="false" 
+                id="userDropdown"
+              )
+                img.user-avatar-img.rounded-circle.border(
+                  src=user.avatar || '/uploads/default-avatar.png' 
+                  alt=user.fullName 
+                )
+
+              // Dropdown Menu
+              ul.dropdown-menu.dropdown-menu-end.ant-dropdown-menu.shadow.border-0.rounded-3.mt-2.py-2(aria-labelledby="userDropdown")
+                // User Info Block (Nằm ngang Flex)
+                li.px-3.py-2.border-bottom
+                  .d-flex.align-items-center.gap-3
+                    img.user-avatar-dropdown.rounded-circle.border(
+                      src=user.avatar || '/uploads/default-avatar.png' 
+                      alt=user.fullName 
+                    )
+                    .user-info-text.overflow-hidden
+                      .fw-bold.text-dark.text-truncate #{user.fullName}
+                      .small.text-muted.text-truncate #{user.email}
+
+                // Links
+                li
+                  a.dropdown-item.d-flex.align-items-center.gap-2.py-2(href="/user/profile")
+                    i.fa-regular.fa-user
+                    span Profile
+                li
+                  a.dropdown-item.d-flex.align-items-center.gap-2.py-2(href="/user/orders")
+                    i.fa-solid.fa-receipt
+                    span My orders
+                li
+                  a.dropdown-item.d-flex.align-items-center.gap-2.py-2(href="/user/change-password")
+                    i.fa-solid.fa-key
+                    span Change password
+
+                li: hr.dropdown-divider.my-1
+
+                // Theme Switcher
+                li
+                  .dropdown-item.d-flex.align-items-center.justify-content-between.py-2#themeToggleBtn
+                    .d-flex.align-items-center.gap-2
+                      i.fa-solid.fa-moon#themeIcon
+                      span Dark mode
+                    .form-check.form-switch.mb-0
+                      input.form-check-input#themeSwitch(type="checkbox")
+
+                li: hr.dropdown-divider.my-1
+
+                // Logout
+                li
+                  a.dropdown-item.text-danger.d-flex.align-items-center.gap-2.py-2(href="/user/logout")
+                    i.fa-solid.fa-right-from-bracket
+                    span Sign Out
+          else
+            a.btn.btn-outline-custom(href="/user/login") Sign In
+            a.btn.btn-primary-custom(href="/user/register") Sign Up

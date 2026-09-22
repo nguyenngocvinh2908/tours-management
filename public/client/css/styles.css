@@ -16,7 +16,7 @@
   --accent-orange: #ff6b35;
   --accent-yellow: #ffc107;
   
-  /* Neutral Palette */
+  /* Neutral Palette (Light Mode Default) */
   --dark-heading: #1e293b;
   --body-text: #475569;
   --muted-text: #94a3b8;
@@ -43,7 +43,26 @@
 }
 
 /* --------------------------------------------------------------------------
-   2. GLOBAL & BASE RESETS
+   2. DARK MODE VARIABLES OVERRIDE
+   -------------------------------------------------------------------------- */
+body.dark-mode {
+  --dark-heading: #f8fafc;
+  --body-text: #cbd5e1;
+  --muted-text: #64748b;
+  --bg-light: #0f172a;
+  --bg-card: #1e293b;
+  --border-color: #334155;
+  --border-light: #1e293b;
+  --primary-light: rgba(13, 110, 253, 0.15);
+  
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 12px 28px rgba(0, 0, 0, 0.5);
+  --shadow-hover: 0 18px 36px rgba(0, 0, 0, 0.6);
+}
+
+/* --------------------------------------------------------------------------
+   3. GLOBAL & BASE RESETS
    -------------------------------------------------------------------------- */
 body {
   font-family: var(--font-sans);
@@ -51,6 +70,7 @@ body {
   background-color: var(--bg-light);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -70,11 +90,16 @@ img {
   object-fit: cover;
 }
 
+.style-pointer {
+  cursor: pointer;
+  user-select: none;
+}
+
 /* --------------------------------------------------------------------------
-   3. HEADER & NAVIGATION (partials/header.pug)
+   4. HEADER & NAVIGATION
    -------------------------------------------------------------------------- */
 .main-header {
-  background-color: #ffffff;
+  background-color: var(--bg-card);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--border-color);
   transition: var(--transition-smooth);
@@ -115,11 +140,11 @@ img {
   background-color: var(--primary-light);
 }
 
-/* Custom Header Search Bar */
+/* Header Search Bar */
 .header-search-form {
   position: relative;
   width: 100%;
-  max-width: 420px; /* Điều chỉnh độ rộng tối đa tùy giao diện */
+  max-width: 420px;
   margin: 0 auto;
 }
 
@@ -127,42 +152,39 @@ img {
   position: relative;
   display: flex;
   align-items: center;
-  background-color: #f8fafc;
-  border: 1.5px solid #e2e8f0;
-  border-radius: 50px; /* Bo tròn capsule mượt mà */
+  background-color: var(--bg-light);
+  border: 1.5px solid var(--border-color);
+  border-radius: 50px;
   padding: 4px 6px 4px 18px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+  box-shadow: var(--shadow-sm);
 }
 
-/* Icon kính lúp góc trái */
 .search-icon {
-  color: #94a3b8;
+  color: var(--muted-text);
   font-size: 0.95rem;
   margin-right: 10px;
   pointer-events: none;
   transition: color 0.3s ease;
 }
 
-/* Ô nhập chữ */
 .search-input {
   width: 100%;
   border: none;
   background: transparent;
   outline: none;
   font-size: 0.925rem;
-  color: #1e293b;
+  color: var(--dark-heading);
   font-weight: 500;
 }
 
 .search-input::placeholder {
-  color: #94a3b8;
+  color: var(--muted-text);
   font-weight: 400;
 }
 
-/* Nút Submit bên phải */
 .search-btn {
-  background: linear-gradient(135deg, #0d6efd, #0b5ed7);
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
   color: #ffffff;
   border: none;
   border-radius: 40px;
@@ -178,26 +200,87 @@ img {
 }
 
 .search-btn:hover {
-  background: linear-gradient(135deg, #0b5ed7, #0a58ca);
+  background: linear-gradient(135deg, var(--primary-hover), #0a58ca);
   transform: translateY(-1px);
   box-shadow: 0 6px 16px rgba(13, 110, 253, 0.3);
 }
 
-/* HIỆU ỨNG FOCUS (Khi người dùng click vào ô tìm kiếm) */
 .search-input-group:focus-within {
-  background-color: #ffffff;
-  border-color: #0d6efd;
-  box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.12), 0 8px 20px rgba(0, 0, 0, 0.04);
+  background-color: var(--bg-card);
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.12), var(--shadow-md);
 }
 
 .search-input-group:focus-within .search-icon {
-  color: #0d6efd;
+  color: var(--primary-color);
 }
 
-/* Responsive cho màn hình nhỏ (Mobile) */
+/* --------------------------------------------------------------------------
+   5. USER AVATAR & ANT DESIGN DROPDOWN MENU
+   -------------------------------------------------------------------------- */
+.user-avatar-img {
+  width: 40px !important;
+  height: 40px !important;
+  object-fit: cover;
+  flex-shrink: 0;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.user-avatar-img:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 0 2px var(--primary-color);
+}
+
+.user-avatar-dropdown {
+  width: 44px !important;
+  height: 44px !important;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.user-info-text {
+  min-width: 0;
+}
+
+.ant-dropdown-menu {
+  min-width: 240px;
+  background-color: var(--bg-card) !important;
+  border: 1px solid var(--border-color) !important;
+  box-shadow: var(--shadow-lg) !important;
+}
+
+.ant-dropdown-menu .dropdown-item {
+  font-size: 0.9rem;
+  color: var(--dark-heading);
+  transition: all 0.2s ease;
+  border-radius: var(--radius-sm);
+  margin: 0 4px;
+  width: calc(100% - 8px);
+}
+
+.ant-dropdown-menu .dropdown-item:hover {
+  background-color: var(--primary-light);
+  color: var(--primary-color);
+}
+
+.ant-dropdown-menu .dropdown-item.text-danger:hover {
+  background-color: rgba(255, 77, 79, 0.1);
+  color: #ff4d4f;
+}
+
+body.dark-mode .border-bottom,
+body.dark-mode .dropdown-divider {
+  border-color: var(--border-color) !important;
+}
+
+body.dark-mode .text-dark {
+  color: var(--dark-heading) !important;
+}
+
+/* Responsive Search */
 @media (max-width: 576px) {
   .search-btn span {
-    display: none; /* Ẩn chữ 'Search' trên mobile, chỉ giữ lại icon */
+    display: none;
   }
   .search-btn {
     padding: 8px 12px;
@@ -208,7 +291,7 @@ img {
 }
 
 /* --------------------------------------------------------------------------
-   4. BANNERS & PAGE HEADERS
+   6. BANNERS & PAGE HEADERS
    -------------------------------------------------------------------------- */
 .page-header-banner {
   background: linear-gradient(135deg, rgba(13, 110, 253, 0.06) 0%, rgba(14, 210, 169, 0.06) 100%);
@@ -224,7 +307,7 @@ img {
 }
 
 /* --------------------------------------------------------------------------
-   5. FILTER SIDEBAR (components)
+   7. FILTER SIDEBAR
    -------------------------------------------------------------------------- */
 .filter-card {
   background-color: var(--bg-card);
@@ -257,7 +340,7 @@ img {
 }
 
 /* --------------------------------------------------------------------------
-   6. TOUR CARD COMPONENT
+   8. TOUR CARD COMPONENT
    -------------------------------------------------------------------------- */
 .tour-card {
   background-color: var(--bg-card);
@@ -390,7 +473,7 @@ img {
 }
 
 /* --------------------------------------------------------------------------
-   7. CATEGORY CARD COMPONENT
+   9. CATEGORY CARD COMPONENT
    -------------------------------------------------------------------------- */
 .category-card {
   position: relative;
@@ -441,7 +524,7 @@ img {
 }
 
 /* --------------------------------------------------------------------------
-   8. FOOTER (partials/footer.pug)
+   10. FOOTER
    -------------------------------------------------------------------------- */
 .main-footer {
   background-color: #0f172a;
@@ -485,7 +568,7 @@ img {
 }
 
 /* --------------------------------------------------------------------------
-   9. BUTTON & FORM EXTENSIONS
+   11. BUTTON & FORM EXTENSIONS
    -------------------------------------------------------------------------- */
 .btn-primary-custom {
   background-color: var(--primary-color);
@@ -505,7 +588,7 @@ img {
 .btn-outline-custom {
   border: 1px solid var(--border-color);
   color: var(--dark-heading);
-  background-color: #ffffff;
+  background-color: var(--bg-card);
   font-weight: 600;
   border-radius: var(--radius-sm);
   padding: 8px 18px;

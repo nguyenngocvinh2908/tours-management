@@ -138,3 +138,9 @@ export const loginPost = async (req: Request, res: Response): Promise<void> => {
     res.json({ code: 500, message: 'System error, please try again later!'})
   }
 }
+
+// [ GET ] /user/logout
+export const logout = async (req: Request, res: Response): Promise<void> => {
+  res.clearCookie("tokenUser")
+  res.redirect("/")
+}
