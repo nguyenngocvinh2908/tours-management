@@ -273,6 +273,7 @@ body.dark-mode .dropdown-divider {
   border-color: var(--border-color) !important;
 }
 
+body.dark-mode .text-muted,
 body.dark-mode .text-dark {
   color: var(--dark-heading) !important;
 }
@@ -597,4 +598,170 @@ body.dark-mode .text-dark {
 .btn-outline-custom:hover {
   background-color: var(--bg-light);
   color: var(--primary-color);
+}
+
+/* ==========================================================================
+   12. COMPREHENSIVE DARK MODE OVERRIDES (FIX ALL REMAINING CLASSES)
+   ========================================================================== */
+
+/* --- 12.1. BOOTSTRAP CARDS & CONTAINERS --- */
+body.dark-mode .card,
+body.dark-mode .list-group-item,
+body.dark-mode .accordion-item,
+body.dark-mode .offcanvas {
+  background-color: var(--bg-card) !important;
+  color: var(--body-text) !important;
+  border-color: var(--border-color) !important;
+}
+
+body.dark-mode .card-header,
+body.dark-mode .card-footer,
+body.dark-mode .accordion-button {
+  background-color: var(--bg-light) !important;
+  color: var(--dark-heading) !important;
+  border-color: var(--border-color) !important;
+}
+
+body.dark-mode .accordion-button:not(.collapsed) {
+  background-color: var(--primary-light) !important;
+  color: var(--primary-color) !important;
+}
+
+/* --- 12.2. FORMS, INPUTS, SELECTS & CHECKBOXES --- */
+body.dark-mode .form-control,
+body.dark-mode .form-select,
+body.dark-mode .input-group-text {
+  background-color: var(--bg-card) !important;
+  color: var(--dark-heading) !important;
+  border-color: var(--border-color) !important;
+}
+
+body.dark-mode .form-control:focus,
+body.dark-mode .form-select:focus {
+  background-color: var(--bg-card) !important;
+  color: var(--dark-heading) !important;
+  border-color: var(--primary-color) !important;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25) !important;
+}
+
+body.dark-mode .form-control::placeholder {
+  color: var(--muted-text) !important;
+}
+
+body.dark-mode .form-check-input {
+  background-color: var(--bg-card);
+  border-color: var(--border-color);
+}
+
+body.dark-mode .form-check-input:checked {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+/* --- 12.3. TABLES (CART, BOOKING, HISTORY) --- */
+body.dark-mode .table {
+  color: var(--body-text) !important;
+  border-color: var(--border-color) !important;
+}
+
+body.dark-mode .table th,
+body.dark-mode .table td {
+  background-color: var(--bg-card) !important;
+  color: var(--body-text) !important;
+  border-color: var(--border-color) !important;
+}
+
+body.dark-mode .table-striped > tbody > tr:nth-of-type(odd) > * {
+  background-color: var(--bg-light) !important;
+  color: var(--dark-heading) !important;
+}
+
+body.dark-mode .table-hover > tbody > tr:hover > * {
+  background-color: var(--primary-light) !important;
+  color: var(--dark-heading) !important;
+}
+
+/* --- 12.4. MODALS & POPUPS --- */
+body.dark-mode .modal-content {
+  background-color: var(--bg-card) !important;
+  color: var(--body-text) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+body.dark-mode .modal-header,
+body.dark-mode .modal-footer {
+  border-color: var(--border-color) !important;
+}
+
+body.dark-mode .btn-close {
+  filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+/* --- 12.5. BOOTSTRAP UTILITY CLASSES OVERRIDE --- */
+body.dark-mode .bg-white,
+body.dark-mode .bg-light {
+  background-color: var(--bg-card) !important;
+}
+
+body.dark-mode .bg-body {
+  background-color: var(--bg-light) !important;
+}
+
+body.dark-mode .text-dark,
+body.dark-mode .text-body,
+body.dark-mode .text-black {
+  color: var(--dark-heading) !important;
+}
+
+body.dark-mode .text-secondary,
+body.dark-mode .text-muted {
+  color: var(--muted-text) !important;
+}
+
+body.dark-mode .border,
+body.dark-mode .border-top,
+body.dark-mode .border-bottom,
+body.dark-mode .border-start,
+body.dark-mode .border-end {
+  border-color: var(--border-color) !important;
+}
+
+/* --- 12.6. PAGINATION & BADGES --- */
+body.dark-mode .page-link {
+  background-color: var(--bg-card) !important;
+  color: var(--body-text) !important;
+  border-color: var(--border-color) !important;
+}
+
+body.dark-mode .page-item.active .page-link {
+  background-color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+  color: #ffffff !important;
+}
+
+body.dark-mode .page-link:hover {
+  background-color: var(--primary-light) !important;
+  color: var(--primary-color) !important;
+}
+
+body.dark-mode .badge.bg-light {
+  background-color: var(--border-color) !important;
+  color: var(--dark-heading) !important;
+}
+
+/* --- 12.7. ALERTS & BREADCRUMBS --- */
+body.dark-mode .breadcrumb-item,
+body.dark-mode .breadcrumb-item a {
+  color: var(--muted-text);
+}
+
+body.dark-mode .breadcrumb-item.active {
+  color: var(--dark-heading);
+}
+
+body.dark-mode .alert-secondary,
+body.dark-mode .alert-light {
+  background-color: var(--bg-card);
+  color: var(--body-text);
+  border-color: var(--border-color);
 }

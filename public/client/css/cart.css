@@ -1,3 +1,8 @@
+/* ==========================================================================
+   UTILITIES & CUSTOM COMPONENTS (SUPPORT DARK MODE)
+   ========================================================================== */
+
+/* Truncate Text */
 .line-clamp-2 {
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -5,22 +10,42 @@
   overflow: hidden;
 }
 
+/* Custom Font Size */
 .fs-7 {
   font-size: 0.8rem;
 }
 
+/* Gradient Primary Button */
 .btn-gradient-primary {
-  background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
-  color: #fff;
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%);
+  color: #ffffff !important;
   border: none;
   transition: all 0.3s ease;
 }
 
 .btn-gradient-primary:hover {
-  background: linear-gradient(135deg, #0a58ca 0%, #084298 100%);
-  color: #fff;
+  background: linear-gradient(135deg, var(--primary-hover) 0%, #0a58ca 100%);
+  color: #ffffff !important;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+  box-shadow: 0 4px 12px rgba(13, 110, 253, 0.35);
+}
+
+body.dark-mode .btn-gradient-primary:hover {
+  box-shadow: 0 4px 12px rgba(13, 110, 253, 0.5);
+}
+
+/* Input Quantity (Fix cho Cart/Checkout) */
+.input-quantity {
+  background-color: var(--bg-card);
+  color: var(--dark-heading);
+  border: 1px solid var(--border-color);
+  transition: var(--transition-fast);
+}
+
+.input-quantity:focus {
+  background-color: var(--bg-card);
+  color: var(--dark-heading);
+  border-color: var(--primary-color);
 }
 
 .input-quantity::-webkit-inner-spin-button,
@@ -29,16 +54,33 @@
   margin: 0;
 }
 
+/* Delete Item Button */
 .btn-delete-item {
   width: 36px;
   height: 36px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  border-radius: var(--radius-sm);
+  background-color: transparent;
+  color: var(--muted-text);
+  border: 1px solid var(--border-color);
   transition: all 0.2s ease;
 }
 
 .btn-delete-item:hover {
   background-color: #dc3545;
-  color: #fff !important;
+  border-color: #dc3545;
+  color: #ffffff !important;
+}
+
+body.dark-mode .btn-delete-item {
+  color: #ff7875;
+  border-color: var(--border-color);
+}
+
+body.dark-mode .btn-delete-item:hover {
+  background-color: #ff4d4f;
+  border-color: #ff4d4f;
+  color: #ffffff !important;
 }

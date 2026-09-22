@@ -1,57 +1,83 @@
+/* ==========================================================================
+   CHECKOUT PAGE STYLES (WITH DARK MODE SUPPORT)
+   ========================================================================== */
+
 /* Card Container */
 .checkout-card {
-  transition: all 0.2s ease-in-out;
+  transition: var(--transition-fast);
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
 }
 
 /* Custom Input Styling */
 .checkout-card .form-control {
   border-radius: 10px;
-  border: 1px solid #e0e0e0;
+  border: 1px solid var(--border-color);
   font-size: 0.95rem;
   padding: 0.65rem 1rem;
+  background-color: var(--bg-card);
+  color: var(--dark-heading);
 }
 
 .checkout-card .form-control:focus {
-  border-color: #0d6efd;
+  border-color: var(--primary-color);
+  background-color: var(--bg-card);
+  color: var(--dark-heading);
   box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+}
+
+.checkout-card .form-control::placeholder {
+  color: var(--muted-text);
 }
 
 /* Payment Option Radio Cards */
 .payment-option-card {
   cursor: pointer;
   transition: all 0.25s ease;
-  background-color: #f8f9fa;
-  border-color: #e9ecef !important;
+  background-color: var(--bg-light);
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--radius-sm);
 }
 
 .payment-option-card:hover {
-  background-color: #ffffff;
-  border-color: #0d6efd !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  background-color: var(--bg-card);
+  border-color: var(--primary-color) !important;
+  box-shadow: var(--shadow-sm);
 }
 
 .payment-option-card input[type="radio"]:checked + div {
-  color: #0d6efd;
+  color: var(--primary-color);
 }
 
+/* Style cho thẻ Payment khi được chọn */
 .payment-option-card:has(input[type="radio"]:checked) {
-  background-color: #f0f7ff;
-  border-color: #0d6efd !important;
+  background-color: var(--primary-light);
+  border-color: var(--primary-color) !important;
+}
+
+body.dark-mode .payment-option-card:has(input[type="radio"]:checked) {
+  background-color: rgba(13, 110, 253, 0.18);
+  border-color: var(--primary-color) !important;
 }
 
 /* Gradient Primary Button */
 .btn-gradient-primary {
-  background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
-  color: #ffffff;
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%);
+  color: #ffffff !important;
   border: none;
-  transition: all 0.3s ease;
+  transition: var(--transition-smooth);
 }
 
 .btn-gradient-primary:hover {
-  background: linear-gradient(135deg, #0a58ca 0%, #084298 100%);
-  color: #ffffff;
+  background: linear-gradient(135deg, var(--primary-hover) 0%, #0a58ca 100%);
+  color: #ffffff !important;
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(13, 110, 253, 0.3) !important;
+}
+
+body.dark-mode .btn-gradient-primary:hover {
+  box-shadow: 0 6px 20px rgba(13, 110, 253, 0.5) !important;
 }
 
 /* Text & Clamp Helpers */
