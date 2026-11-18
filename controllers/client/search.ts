@@ -66,7 +66,7 @@ export const index = async (req: Request, res: Response) => {
       pagination: {
         currentPage: page,
         totalPages: totalPages,
-        baseUrl: `/search/result?keyword=${keyword}`,
+        baseUrl: `/search/result?keyword=${encodeURIComponent(keyword)}`,
         market: true
       }
     })
@@ -106,7 +106,7 @@ export const index = async (req: Request, res: Response) => {
       message: "Successful",
       tourRecords: toursSuggest
     })
-
+    
   }
 
 }
