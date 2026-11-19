@@ -144,3 +144,77 @@ export const logout = async (req: Request, res: Response): Promise<void> => {
   res.clearCookie("tokenUser")
   res.redirect("/")
 }
+
+// [ GET ] /user/profile
+export const profile = async (req: Request, res: Response) => {
+  res.render('client/pages/user/profile', {
+    titlePage: 'Hồ sơ cá nhân',
+    currentPath: '/user/profile'
+  })
+}
+
+// // [ POST ] /user/profile
+// export const profilePost = async (req: Request, res: Response) => {
+//   try {
+//     const userId = res.locals.user.id
+//     const { fullName, phone } = req.body
+
+//     if (!fullName || fullName.trim() === '') {
+//       return res.redirect('/user/profile')
+//     }
+
+//     const updateData: any = {
+//       fullName: fullName.trim(),
+//       phone: phone ? phone.trim() : null
+//     }
+
+//     if (req.file) {
+//       // Nếu lưu local Multer: `/uploads/${req.file.filename}`
+//       // Nếu lưu Cloudinary: `req.file.path`
+//       updateData.avatar = req.file.path
+//     }
+
+//     await User.update(updateData, {
+//       where: { id: userId }
+//     })
+
+//     return res.redirect('/user/profile')
+//   } catch (error) {
+//     console.error('Update Profile Error:', error)
+//     return res.redirect('/user/profile')
+//   }
+// }
+
+// // [ POST ] /user/change-password
+// export const changePasswordPost = async (req: Request, res: Response) => {
+//   try {
+//     const userId = res.locals.user.id
+//     const { currentPassword, newPassword, confirmPassword } = req.body
+
+//     if (!currentPassword || !newPassword || !confirmPassword || newPassword.length < 6 || newPassword !== confirmPassword) {
+//       return res.redirect('/user/profile?tab=security')
+//     }
+
+//     const user: any = await User.findOne({
+//       where: { id: userId, deleted: false }
+//     })
+
+//     if (!user) return res.redirect('/user/login')
+
+//     const isMatch = await bcrypt.compare(currentPassword, user.password)
+//     if (!isMatch) {
+//       return res.redirect('/user/profile?tab=security')
+//     }
+
+//     const hashedPassword = await bcrypt.hash(newPassword, 10)
+//     await User.update(
+//       { password: hashedPassword },
+//       { where: { id: userId } }
+//     )
+
+//     return res.redirect('/user/profile?tab=security')
+//   } catch (error) {
+//     console.error('Change Password Error:', error)
+//     return res.redirect('/user/profile?tab=security')
+//   }
+// }

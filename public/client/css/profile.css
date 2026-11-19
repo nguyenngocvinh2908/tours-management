@@ -1,0 +1,126 @@
+/* ==========================================================================
+   USER PROFILE PAGE STYLES (PUBLIC/CSS/PROFILE.CSS)
+   ========================================================================== */
+
+/* Card Containers */
+.profile-sidebar {
+  border-radius: var(--radius-lg);
+}
+
+.profile-content-card {
+  border-radius: var(--radius-lg);
+}
+
+/* Avatar & Camera Upload Button */
+.profile-avatar-container {
+  position: relative;
+  width: 116px;
+  height: 116px;
+  margin: 0 auto 1.25rem;
+}
+
+.profile-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid var(--bg-card);
+  box-shadow: var(--shadow-md);
+  transition: var(--transition-smooth);
+}
+
+.btn-upload-avatar {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+  color: #ffffff;
+  border: 2px solid var(--bg-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-fast);
+}
+
+.btn-upload-avatar:hover {
+  transform: scale(1.08);
+  color: #ffffff;
+}
+
+/* Sidebar Navigation Pills */
+.profile-nav .nav-link {
+  color: var(--body-text);
+  font-weight: 600;
+  font-size: 0.925rem;
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 6px;
+  transition: var(--transition-fast);
+}
+
+.profile-nav .nav-link i {
+  width: 20px;
+  text-align: center;
+  color: var(--muted-text);
+  transition: var(--transition-fast);
+}
+
+.profile-nav .nav-link:hover {
+  background-color: var(--primary-light);
+  color: var(--primary-color);
+}
+
+.profile-nav .nav-link:hover i {
+  color: var(--primary-color);
+}
+
+.profile-nav .nav-link.active {
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+  color: #ffffff !important;
+  box-shadow: 0 4px 12px rgba(13, 110, 253, 0.25);
+}
+
+.profile-nav .nav-link.active i {
+  color: #ffffff !important;
+}
+
+/* Form & Input Group Styling */
+.profile-content-card .input-group-text {
+  background-color: var(--bg-light);
+  border-color: var(--border-color);
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+
+.profile-content-card .form-control {
+  border-radius: 10px;
+  padding: 0.65rem 1rem;
+  background-color: var(--bg-card);
+  border-color: var(--border-color);
+  color: var(--dark-heading);
+}
+
+.profile-content-card .form-control:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+}
+
+.profile-content-card .input-group .form-control {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.profile-content-card .form-control:disabled {
+  background-color: var(--bg-light);
+  color: var(--muted-text);
+  cursor: not-allowed;
+}
