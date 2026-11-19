@@ -1,0 +1,156 @@
+extends ../../layouts/default.pug
+block head
+  link(rel="stylesheet" href="/client/css/profile.css")
+
+block main
+  section.py-5
+    .container
+      .row.g-4.align-items-start
+        //- CỘT TRÁI: Thẻ Tổng Quan & Menu Điều Hướng
+        .col-lg-4
+          .card.glass-card.profile-sidebar.p-4.text-center
+            //- Ảnh đại diện & Nút đổi ảnh
+            .profile-avatar-container
+              img#avatarPreview.profile-avatar-img(
+                src=(user.avatar || '/uploads/default-avatar.png')
+                alt=user.fullName
+              )
+              label.btn-upload-avatar(for="avatarInput" title="Thay đổi ảnh đại diện")
+                i.fa-solid.fa-camera
+
+            //- Thông tin cơ bản
+            h5.fw-bold.mb-1= user.fullName
+            p.text-muted.extra-small.mb-3= user.email
+
+            //- Badge trạng thái & Ngày tham gia
+            .d-flex.justify-content-center.align-items-center.gap-2.mb-4
+              span.badge.rounded-pill.px-3.py-2(style="background-color: var(--primary-light); color: var(--primary-color); font-weight: 600;")
+                i.fa-solid.fa-circle-check.me-1
+                | Verified Account
+              if user.createdAt
+                span.badge.rounded-pill.px-3.py-2.border.text-muted
+                  i.fa-regular.fa-calendar.me-1
+                  | #{new Date(user.createdAt).toLocaleDateString('vi-VN')}
+
+            hr.my-3.opacity-25
+
+            //- Menu chuyển đổi Tab
+            #profileTab.nav.flex-column.nav-pills.profile-nav.text-start(role="tablist")
+              button#tab-info-btn.nav-link.active(
+                data-bs-toggle="pill"
+                data-bs-target="#tab-info"
+                type="button"
+                role="tab"
+              )
+                i.fa-solid.fa-user-pen
+                span Personal information
+
+              button#tab-security-btn.nav-link(
+                data-bs-toggle="pill"
+                data-bs-target="#tab-security"
+                type="button"
+                role="tab"
+              )
+                i.fa-solid.fa-shield-halved
+                span Security & Password
+
+              a.nav-link(href="/user/orders")
+                i.fa-solid.fa-clock-rotate-left
+                span Booking History
+
+        //- CỘT PHẢI: Nội Dung Form Chi Tiết
+        .col-lg-8
+          .card.glass-card.profile-content-card.p-4.p-md-5
+            #profileTabContent.tab-content
+              
+              //- TAB 1: CẬP NHẬT THÔNG TIN CÁ NHÂN
+              #tab-info.tab-pane.fade.show.active(role="tabpanel")
+                .d-flex.align-items-center.justify-content-between.mb-4.pb-3.border-bottom
+                  div
+                    h4.fw-bold.mb-1 Personal Profile
+                    p.text-muted.extra-small.mb-0 Manage contact information displayed on the system
+
+                form(action="/user/profile" method="POST" enctype="multipart/form-data")
+                  //- Input file ẩn nằm trong form để gửi kèm ảnh khi submit
+                  input#avatarInput.d-none(type="file" name="avatar" accept="image/*")
+
+                  .row.g-4
+                    .col-md-6
+                      label.form-label.fw-semibold.small(for="fullName") FullName
+                      .input-group
+                        span.input-group-text
+                          i.fa-regular.fa-user.text-muted
+                        input#fullName.form-control(
+                          type="text"
+                          name="fullName"
+                          value=user.fullName
+                          placeholder="Nhập họ và tên của bạn"
+                        )
+
+                    .col-md-6
+                      label.form-label.fw-semibold.small(for="phone") Phone
+                      .input-group
+                        span.input-group-text
+                          i.fa-solid.fa-phone.text-muted
+                        input#phone.form-control(
+                          type="tel"
+                          name="phone"
+                          value=(user.phone || '')
+                          placeholder="Nhập số điện thoại liên hệ"
+                        )
+
+                    .col-12
+                      label.form-label.fw-semibold.small(for="email") Email
+                      .input-group
+                        span.input-group-text
+                          i.fa-regular.fa-envelope.text-muted
+                        input#email.form-control(
+                          type="email"
+                          value=user.email
+                          disabled
+                          readonly
+                        )
+                      .form-text.text-muted.extra-small.mt-1
+                        i.fa-solid.fa-circle-info.me-1
+                        | The email address is used as a login identifier and cannot be changed.
+
+                    .col-12.pt-2.d-flex.justify-content-end
+                      button.btn.btn-outline-primary.px-4.py-2(type="submit")
+                        i.fa-solid.fa-check.me-2
+                        | Save and change
+
+              //- TAB 2: ĐỔI MẬT KHẨU
+              #tab-security.tab-pane.fade(role="tabpanel")
+                .d-flex.align-items-center.justify-content-between.mb-4.pb-3.border-bottom
+                  div
+                    h4.fw-bold.mb-1 Change Password
+                    p.text-muted.extra-small.mb-0 Ensure your account uses a strong password to protect your information.
+
+                form(action="/user/change-password" method="POST" style="max-width: 480px;")
+                  .mb-3
+                    label.form-label.fw-semibold.small(for="currentPassword") Current Password
+                    input#currentPassword.form-control(
+                      type="password"
+                      name="currentPassword"
+                      placeholder="Nhập mật khẩu đang sử dụng"
+                    )
+
+                  .mb-3
+                    label.form-label.fw-semibold.small(for="newPassword") New Password
+                    input#newPassword.form-control(
+                      type="password"
+                      name="newPassword"
+                      placeholder="Tối thiểu 6 ký tự"
+                    )
+
+                  .mb-4
+                    label.form-label.fw-semibold.small(for="confirmPassword") Confirm New Password
+                    input#confirmPassword.form-control(
+                      type="password"
+                      name="confirmPassword"
+                      placeholder="Nhập lại mật khẩu mới"
+                    )
+
+                  button.btn.btn-outline-primary.px-4.py-2(type="submit")
+                    i.fa-solid.fa-key.me-2
+                    | Update Password 

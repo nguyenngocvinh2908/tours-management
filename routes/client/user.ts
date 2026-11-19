@@ -14,5 +14,13 @@ router.post('/login', auth.checkGuest, controller.loginPost)
 
 router.get('/logout', auth.requireAuth, controller.logout)
 
+// [ GET ] /user/profile - Hiển thị trang thông tin cá nhân
+router.get('/profile', auth.requireAuth, controller.profile)
+
+// // [ POST ] /user/profile - Cập nhật thông tin cá nhân
+// router.post('/profile', auth.requireAuth, controller.profilePost)
+
+// // [ POST ] /user/change-password - Đổi mật khẩu
+// router.post('/change-password', auth.requireAuth, controller.changePasswordPost)
 
 export const UserRouter: Router = router
